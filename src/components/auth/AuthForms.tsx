@@ -73,16 +73,38 @@ const AuthForms: React.FC<AuthFormsProps> = ({ mode, onModeChange, onSuccess }) 
     if (!validateForm()) return;
 
     try {
+      console.log('Starting authentication process for mode:', mode);
       if (mode === 'signin') {
+        console.log('Attempting sign in for email:', email);
         await signIn(email, password);
+        console.log('Sign in successful');
       } else {
+        console.log('Attempting sign up for email:', email, 'username:', username);
         await signUp(email, password, username);
+        console.log('Sign up successful');
       }
       
+      console.log('Authentication completed, calling onSuccess');
       onSuccess?.();
     } catch (error) {
+      console.error('Authentication error:', error);
+      
+      let errorMessage = 'An error occurred during authentication';
+      
+      if (error instanceof Error) {
+        if (error.message.includes('Email not confirmed')) {
+          errorMessage = 'Please check your email and click the confirmation link before signing in. Check your spam folder if you don\'t see it.';
+        } else if (error.message.includes('Invalid login credentials')) {
+          errorMessage = 'Invalid email or password. Please try again.';
+        } else if (error.message.includes('User already registered')) {
+          errorMessage = 'An account with this email already exists. Please sign in instead.';
+        } else {
+          errorMessage = error.message;
+        }
+      }
+      
       setErrors({
-        form: error instanceof Error ? error.message : 'An error occurred',
+        form: errorMessage,
       });
     }
   };
@@ -170,15 +192,17 @@ const AuthForms: React.FC<AuthFormsProps> = ({ mode, onModeChange, onSuccess }) 
             <button
               type="button"
               onClick={() => setShowPassword(!showPassword)}
-              className="absolute inset-y-0 right-0 pr-3 flex items-center text-lunar-glow opacity-70 hover:opacity-100"
+              className="absolute right-3 top-1/2 transform -translate-y-1/2 text-lunar-glow opacity-70 hover:opacity-100"
             >
-              {showPassword ? <EyeOff className="w-5 h-5" /> : <Eye className="w-5 h-5" />}
+              {showPassword ? <EyeOff className="w-4 h-4" /> : <Eye className="w-4 h-4" />}
             </button>
           </div>
           {errors.password && (
             <p className="mt-1 text-sm text-crimson-stain">{errors.password}</p>
           )}
-        </div>        {/* Confirm Password field (signup only) */}
+        </div>
+
+        {/* Confirm Password field (signup only) */}
         {mode === 'signup' && (
           <div>
             <label htmlFor="confirmPassword" className="block text-sm font-medium text-lunar-glow mb-2">
@@ -186,7 +210,7 @@ const AuthForms: React.FC<AuthFormsProps> = ({ mode, onModeChange, onSuccess }) 
             </label>
             <input
               id="confirmPassword"
-              type={showPassword ? 'text' : 'password'}
+              type="password"
               value={confirmPassword}
               onChange={(e) => {
                 setConfirmPassword(e.target.value);
@@ -198,6 +222,13 @@ const AuthForms: React.FC<AuthFormsProps> = ({ mode, onModeChange, onSuccess }) 
             {errors.confirmPassword && (
               <p className="mt-1 text-sm text-crimson-stain">{errors.confirmPassword}</p>
             )}
+          </div>
+        )}
+
+        {/* Email confirmation notice for signup */}
+        {mode === 'signup' && (
+          <div className="text-sm text-lunar-glow opacity-70 bg-midnight-aura p-3 rounded-lg">
+            <p>📧 After signing up, you'll receive a confirmation email. Please check your inbox (and spam folder) and click the confirmation link before signing in.</p>
           </div>
         )}
 

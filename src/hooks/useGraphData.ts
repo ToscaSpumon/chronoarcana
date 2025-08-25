@@ -3,9 +3,9 @@ import { DailyPull, PullAnalytics, ChartData, Timeframe } from '@/types';
 import { CHART_COLORS } from '@/utils/constants';
 
 export const useGraphData = (
-  pulls: DailyPull[], 
+  pulls: DailyPull[],
   timeframe: Timeframe,
-  colors: string[] = CHART_COLORS.PRIMARY
+  colors: string[] = [...CHART_COLORS.PRIMARY]
 ) => {
   const [loading, setLoading] = useState(false);
 

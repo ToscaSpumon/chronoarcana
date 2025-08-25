@@ -39,7 +39,7 @@ const Dashboard: React.FC = () => {
       <>
         <Navbar />
         <div className="min-h-screen flex items-center justify-center">
-          <LoadingSpinner size="large" text="Loading your dashboard..." />
+          <LoadingSpinner size="xl" text="Loading your dashboard..." />
         </div>
       </>
     );

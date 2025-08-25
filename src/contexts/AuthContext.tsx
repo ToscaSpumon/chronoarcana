@@ -36,7 +36,9 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
     if (!user) return;
     
     try {
+      console.log('Refreshing profile for user:', user.id);
       const profile = await userAPI.getProfile(user.id);
+      console.log('Profile loaded:', profile);
       setUserProfile(profile);
     } catch (error) {
       console.error('Failed to fetch user profile:', error);
@@ -45,20 +47,37 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
 
   useEffect(() => {
     // Get initial session
-    supabase.auth.getSession().then(({ data: { session } }) => {
+    console.log('AuthContext: Getting initial session...');
+    supabase.auth.getSession().then(({ data: { session }, error }) => {
+      if (error) {
+        console.error('AuthContext: Error getting initial session:', error);
+      } else {
+        console.log('AuthContext: Initial session result:', { 
+          hasUser: !!session?.user, 
+          userId: session?.user?.id,
+          sessionError: error 
+        });
+      }
       setUser(session?.user ?? null);
       setLoading(false);
     });
 
     // Listen for auth changes
+    console.log('AuthContext: Setting up auth state change listener...');
     const { data: { subscription } } = supabase.auth.onAuthStateChange(
       async (event, session) => {
+        console.log('AuthContext: Auth state change event:', event, { 
+          hasUser: !!session?.user, 
+          userId: session?.user?.id 
+        });
         setUser(session?.user ?? null);
         setLoading(false);
         
         if (session?.user) {
+          console.log('AuthContext: User authenticated, refreshing profile...');
           await refreshProfile();
         } else {
+          console.log('AuthContext: User signed out, clearing profile');
           setUserProfile(null);
         }
       }
@@ -85,7 +104,12 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
   const signIn = async (email: string, password: string) => {
     setLoading(true);
     try {
+      console.log('AuthContext: Starting sign in process');
       await authAPI.signIn(email, password);
+      console.log('AuthContext: Sign in completed successfully');
+    } catch (error) {
+      console.error('AuthContext: Sign in failed:', error);
+      throw error; // Re-throw the error so the UI can handle it
     } finally {
       setLoading(false);
     }

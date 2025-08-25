@@ -1,4 +1,4 @@
-import type { Metadata } from 'next';
+import type { Metadata, Viewport } from 'next';
 import { Inter, Cinzel } from 'next/font/google';
 import './globals.css';
 import { AuthProvider } from '@/contexts/AuthContext';
@@ -21,9 +21,6 @@ export const metadata: Metadata = {
   description: 'Track your daily Tarot card pulls, discover patterns in your readings, and deepen your spiritual journey with ChronoArcana.',
   keywords: ['tarot', 'divination', 'spiritual', 'daily readings', 'card tracking'],
   authors: [{ name: 'ChronoArcana Team' }],
-  viewport: 'width=device-width, initial-scale=1',
-  themeColor: '#0F0F1A',
-  colorScheme: 'dark',
   openGraph: {
     title: 'ChronoArcana - Digital Tarot Companion',
     description: 'Track your daily Tarot card pulls and discover patterns in your readings.',
@@ -35,6 +32,13 @@ export const metadata: Metadata = {
     title: 'ChronoArcana - Digital Tarot Companion',
     description: 'Track your daily Tarot card pulls and discover patterns in your readings.',
   },
+};
+
+export const viewport: Viewport = {
+  width: 'device-width',
+  initialScale: 1,
+  themeColor: '#0F0F1A',
+  colorScheme: 'dark',
 };
 
 export default function RootLayout({

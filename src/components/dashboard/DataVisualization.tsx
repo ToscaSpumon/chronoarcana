@@ -41,8 +41,8 @@ const DataVisualization: React.FC<DataVisualizationProps> = ({ pulls }) => {
     setPreferredTimeframe(timeframe);
   };
 
-  const handleColorSchemeChange = (colors: string[]) => {
-    setSelectedColors(colors);
+  const handleColorSchemeChange = (colors: readonly string[]) => {
+    setSelectedColors([...colors]);
   };
 
   if (!hasData) {

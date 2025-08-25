@@ -1,3 +1,5 @@
+import { supabase } from './supabaseClient';
+
 // Analytics API - continuation of api.ts
 export const analyticsAPI = {
   getPullStats: async (userId: string, timeframe: 'month' | 'year' | 'all' = 'all') => {
@@ -46,12 +48,12 @@ export const analyticsAPI = {
     const headers = ['Date', 'Card Name', 'Suit', 'Pull Type', 'Reversed', 'Notes', 'Keywords'];
     const csvData = data?.map(pull => [
       pull.pull_date,
-      pull.card?.card_name || '',
-      pull.card?.suit || '',
+      (pull.card as any)?.card_name || '',
+      (pull.card as any)?.suit || '',
       pull.pull_type,
       pull.is_reversed ? 'Yes' : 'No',
       pull.notes || '',
-      pull.card?.keywords || '',
+      (pull.card as any)?.keywords || '',
     ]);
 
     const csvContent = [

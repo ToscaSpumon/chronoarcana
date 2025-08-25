@@ -226,13 +226,19 @@ const LandingPage: React.FC = () => {
       {/* Auth Modal */}
       <Modal
         isOpen={showAuthModal}
-        onClose={() => setShowAuthModal(false)}
+        onClose={() => {
+          console.log('Auth modal closing');
+          setShowAuthModal(false);
+        }}
         size="md"
       >
         <AuthForms
           mode={authMode}
           onModeChange={setAuthMode}
-          onSuccess={() => setShowAuthModal(false)}
+          onSuccess={() => {
+            console.log('Auth success callback triggered');
+            setShowAuthModal(false);
+          }}
         />
       </Modal>
     </div>

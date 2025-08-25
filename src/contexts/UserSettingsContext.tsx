@@ -40,7 +40,7 @@ export const useUserSettings = () => {
 const DEFAULT_SETTINGS = {
   preferredGraphType: 'bar' as GraphType,
   preferredTimeframe: 'month' as Timeframe,
-  selectedColors: CHART_COLORS.PRIMARY,
+  selectedColors: [...CHART_COLORS.PRIMARY],
   isDarkMode: true, // Always dark mode for ChronoArcana
   preferredDeckId: null,
 };
