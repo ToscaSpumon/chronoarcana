@@ -139,8 +139,8 @@ const DeckToggle: React.FC<DeckToggleProps> = ({ currentDeckId, onDeckChange }) 
   }
 
   return (
-    <div className="card p-4 deck-toggle h-full flex flex-col">
-      <div className="flex-1 space-y-4">
+    <div className="card p-4 deck-toggle flex flex-col max-h-96">
+      <div className="space-y-4">
         {/* Current Deck Cover - Full Width */}
         <div className="relative w-full">
           {currentDeck.image_url ? (
@@ -166,7 +166,7 @@ const DeckToggle: React.FC<DeckToggleProps> = ({ currentDeckId, onDeckChange }) 
         </div>
 
         {/* Deck Info */}
-        <div className="text-center flex-1">
+        <div className="text-center">
           <h3 className="text-2xl font-cinzel font-semibold text-lunar-glow mb-3">
             Current Deck
           </h3>
@@ -181,7 +181,7 @@ const DeckToggle: React.FC<DeckToggleProps> = ({ currentDeckId, onDeckChange }) 
         </div>
 
         {/* Spacer to push buttons to bottom */}
-        <div className="flex-1"></div>
+        <div className="pt-4"></div>
 
         {/* Action Buttons */}
         <div className="flex justify-between items-center pt-4 border-t border-midnight-aura">

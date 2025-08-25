@@ -126,9 +126,9 @@ const Dashboard: React.FC = () => {
           </div>
 
           {/* Right Column - Sidebar */}
-          <div className="space-y-6">
-            {/* Deck Toggle - Full Height */}
-            <div className="h-full">
+          <div className="space-y-8 relative">
+            {/* Deck Toggle */}
+            <div className="relative z-10">
               <DeckToggle
                 currentDeckId={userProfile?.chosen_deck_id}
                 onDeckChange={handleDeckChange}
@@ -136,7 +136,7 @@ const Dashboard: React.FC = () => {
             </div>
             
             {/* Quick Stats */}
-            <div className="card">
+            <div className="card relative z-10 mt-8">
               <h3 className="text-xl font-cinzel font-semibold text-lunar-glow mb-4">
                 Quick Stats
               </h3>
@@ -169,7 +169,7 @@ const Dashboard: React.FC = () => {
 
         {/* Free user upgrade prompt - moved to bottom */}
         {userProfile?.subscription_status === 'free' && daysUntilRetention !== null && (
-          <div className="mt-12">
+          <div className="mt-16">
             <UpgradePrompt daysRemaining={daysUntilRetention} />
           </div>
         )}

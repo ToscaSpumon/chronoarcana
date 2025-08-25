@@ -190,20 +190,44 @@ export const tarotAPI = {
 // Daily Pull API
 export const pullAPI = {
   getTodaysPull: async (userId: string): Promise<DailyPull | null> => {
-    const today = new Date().toISOString().split('T')[0];
+    const today = new Date();
+    const year = today.getFullYear();
+    const month = String(today.getMonth() + 1).padStart(2, '0');
+    const day = String(today.getDate()).padStart(2, '0');
+    const todayStr = `${year}-${month}-${day}`;
     
     const { data, error } = await supabase
       .from('daily_pulls')
       .select(`
-        *,
-        card:tarot_cards(*)
+        id,
+        user_id,
+        card_id,
+        pull_date,
+        pull_type,
+        notes,
+        is_reversed,
+        created_at,
+        updated_at
       `)
       .eq('user_id', userId)
-      .eq('pull_date', today)
+      .eq('pull_date', todayStr)
       .single();
     
     if (error && error.code !== 'PGRST116') throw error;
-    return data || null;
+    
+    if (!data) return null;
+    
+    // Fetch card data separately to avoid column ambiguity
+    const { data: cardData } = await supabase
+      .from('tarot_cards')
+      .select('*')
+      .eq('id', data.card_id)
+      .single();
+    
+    return {
+      ...data,
+      card: cardData
+    };
   },
 
   createPull: async (pull: Omit<DailyPull, 'id' | 'created_at' | 'updated_at'>) => {
@@ -231,24 +255,62 @@ export const pullAPI = {
       throw new Error('User ID mismatch - security violation');
     }
     
-    const { data, error } = await supabase
+    // First insert the pull without selecting data
+    const { error: insertError } = await supabase
       .from('daily_pulls')
-      .insert(pull)
-      .select(`
-        *,
-        card:tarot_cards(*)
-      `)
-      .single();
+      .insert(pull);
     
-    if (error) {
-      console.error('❌ API: Insert error:', error);
-      console.error('❌ API: Error details:', error.details);
-      console.error('❌ API: Error hint:', error.hint);
-      throw error;
+    if (insertError) {
+      console.error('❌ API: Insert error:', insertError);
+      console.error('❌ API: Error details:', insertError.details);
+      console.error('❌ API: Error hint:', insertError.hint);
+      throw insertError;
     }
     
-    console.log('✅ API: Pull created successfully:', data);
-    return data;
+    // Then fetch the created pull separately to avoid trigger conflicts
+    const { data, error: selectError } = await supabase
+      .from('daily_pulls')
+      .select(`
+        id,
+        user_id,
+        card_id,
+        pull_date,
+        pull_type,
+        notes,
+        is_reversed,
+        created_at,
+        updated_at
+      `)
+      .eq('user_id', pull.user_id)
+      .eq('pull_date', pull.pull_date)
+      .eq('card_id', pull.card_id)
+      .single();
+    
+    if (selectError) {
+      console.error('❌ API: Select error after insert:', selectError);
+      throw selectError;
+    }
+    
+    // Fetch the card data separately
+    const { data: cardData, error: cardError } = await supabase
+      .from('tarot_cards')
+      .select('*')
+      .eq('id', pull.card_id)
+      .single();
+    
+    if (cardError) {
+      console.error('❌ API: Card fetch error:', cardError);
+      throw cardError;
+    }
+    
+    // Combine the data
+    const result = {
+      ...data,
+      card: cardData
+    };
+    
+    console.log('✅ API: Pull created successfully:', result);
+    return result;
   },
 
   updatePullNotes: async (pullId: string, notes: string) => {
@@ -267,14 +329,38 @@ export const pullAPI = {
     const { data, error } = await supabase
       .from('daily_pulls')
       .select(`
-        *,
-        card:tarot_cards(*)
+        id,
+        user_id,
+        card_id,
+        pull_date,
+        pull_type,
+        notes,
+        is_reversed,
+        created_at,
+        updated_at
       `)
       .eq('user_id', userId)
       .order('pull_date', { ascending: false })
       .limit(limit);
     
     if (error) throw error;
-    return data || [];
+    
+    // Fetch card data separately to avoid column ambiguity
+    const pullsWithCards = await Promise.all(
+      (data || []).map(async (pull) => {
+        const { data: cardData } = await supabase
+          .from('tarot_cards')
+          .select('*')
+          .eq('id', pull.card_id)
+          .single();
+        
+        return {
+          ...pull,
+          card: cardData
+        };
+      })
+    );
+    
+    return pullsWithCards;
   },
 };
