@@ -109,8 +109,20 @@ const DeckSelector: React.FC<DeckSelectorProps> = ({ isOpen, onClose, onDeckSele
                   <div className="flex items-center space-x-4">
                     {/* Deck Image */}
                     <div className="flex-shrink-0">
-                      {/* Placeholder for now - will show actual images once database is updated */}
-                      <div className="w-20 h-28 bg-gradient-to-br from-midnight-aura to-shadow-veil rounded-lg border border-astral-gold flex items-center justify-center">
+                      {deck.image_url ? (
+                        <img
+                          src={deck.image_url}
+                          alt={`${deck.name} deck cover`}
+                          className="w-20 h-28 object-contain rounded-lg border border-midnight-aura bg-deep-void"
+                          onError={(e) => {
+                            const target = e.target as HTMLImageElement;
+                            target.style.display = 'none';
+                            target.nextElementSibling?.classList.remove('hidden');
+                          }}
+                        />
+                      ) : null}
+                      {/* Fallback placeholder */}
+                      <div className={`w-20 h-28 bg-gradient-to-br from-midnight-aura to-shadow-veil rounded-lg border border-astral-gold flex items-center justify-center ${deck.image_url ? 'hidden' : ''}`}>
                         <div className="text-center">
                           <div className="text-2xl mb-1">🃏</div>
                           <span className="text-lunar-glow text-xs font-medium">{deck.name}</span>

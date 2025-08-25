@@ -2,7 +2,7 @@
 
 import React, { useState, useEffect } from 'react';
 import { Shuffle, Sparkles } from 'lucide-react';
-import { TarotCard } from '@/types';
+import { TarotCard, TarotDeck } from '@/types';
 import { tarotAPI } from '@/lib/api';
 import { useTarotPulls } from '@/hooks/useTarotPulls';
 import Modal from '@/components/common/Modal';
@@ -21,6 +21,7 @@ const DigitalPullModal: React.FC<DigitalPullModalProps> = ({ isOpen, onClose, de
   const { createPull } = useTarotPulls();
   
   const [cards, setCards] = useState<TarotCard[]>([]);
+  const [deck, setDeck] = useState<TarotDeck | null>(null);
   const [selectedCard, setSelectedCard] = useState<TarotCard | null>(null);
   const [isShuffling, setIsShuffling] = useState(false);
   const [showCard, setShowCard] = useState(false);
@@ -30,6 +31,7 @@ const DigitalPullModal: React.FC<DigitalPullModalProps> = ({ isOpen, onClose, de
   useEffect(() => {
     if (isOpen && deckId) {
       fetchCards();
+      fetchDeck();
     }
   }, [isOpen, deckId]);
 
@@ -44,6 +46,18 @@ const DigitalPullModal: React.FC<DigitalPullModalProps> = ({ isOpen, onClose, de
       setError(err instanceof Error ? err.message : 'Failed to fetch cards');
     } finally {
       setLoading(false);
+    }
+  };
+
+  const fetchDeck = async () => {
+    if (!deckId) return;
+    
+    try {
+      const decks = await tarotAPI.getDecks();
+      const currentDeck = decks.find(d => d.id === deckId);
+      setDeck(currentDeck || null);
+    } catch (err) {
+      console.error('Failed to fetch deck:', err);
     }
   };
 
@@ -129,8 +143,38 @@ const DigitalPullModal: React.FC<DigitalPullModalProps> = ({ isOpen, onClose, de
               </div>
             ) : (
               <div className="space-y-6">
-                <div className="w-24 h-24 mx-auto bg-shadow-veil border-2 border-midnight-aura rounded-xl flex items-center justify-center">
-                  <div className="w-16 h-20 bg-astral-gold bg-opacity-20 rounded-lg"></div>
+                <div className="space-y-3">
+                  <div className="w-24 h-24 mx-auto bg-shadow-veil border-2 border-midnight-aura rounded-xl flex items-center justify-center overflow-hidden">
+                    {deck?.image_url ? (
+                      <img
+                        src={deck.image_url}
+                        alt={`${deck.name} deck cover`}
+                        className="w-full h-full object-contain rounded-lg bg-deep-void"
+                        onError={(e) => {
+                          // Fallback to placeholder if image fails to load
+                          const target = e.target as HTMLImageElement;
+                          target.style.display = 'none';
+                          target.nextElementSibling?.classList.remove('hidden');
+                        }}
+                      />
+                    ) : null}
+                    {/* Fallback placeholder */}
+                    <div className={`w-16 h-20 bg-gradient-to-br from-midnight-aura to-shadow-veil rounded-lg border border-astral-gold flex items-center justify-center ${deck?.image_url ? 'hidden' : ''}`}>
+                      <span className="text-lunar-glow text-xs">🃏</span>
+                    </div>
+                  </div>
+                  {deck && (
+                    <div className="text-center">
+                      <p className="text-lunar-glow opacity-80 text-sm font-medium">
+                        {deck.name} Deck
+                      </p>
+                      {deck.description && (
+                        <p className="text-lunar-glow opacity-60 text-xs mt-1">
+                          {deck.description}
+                        </p>
+                      )}
+                    </div>
+                  )}
                 </div>
                 <div>
                   <h3 className="text-2xl font-cinzel font-semibold text-lunar-glow mb-4">

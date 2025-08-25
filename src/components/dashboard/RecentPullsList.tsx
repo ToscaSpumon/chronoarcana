@@ -75,7 +75,7 @@ const RecentPullsList: React.FC<RecentPullsListProps> = ({ pulls, isFreeTier }) 
                   <img
                     src={pull.card.image_url}
                     alt={pull.card.card_name}
-                    className="w-full h-full object-cover rounded-lg"
+                    className="w-full h-full object-contain rounded-lg bg-deep-void"
                   />
                 ) : (
                   <div className="text-xs text-lunar-glow opacity-50 text-center">

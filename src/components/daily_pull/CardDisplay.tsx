@@ -52,7 +52,7 @@ const CardDisplay: React.FC<CardDisplayProps> = ({
             <img
               src={displayCard.image_url}
               alt={displayCard.card_name}
-              className="w-full h-full object-cover"
+              className="w-full h-full object-contain bg-deep-void"
             />
           ) : (
             <div className="w-full h-full bg-gradient-to-br from-shadow-veil to-midnight-aura flex flex-col items-center justify-center p-4">

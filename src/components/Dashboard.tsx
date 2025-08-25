@@ -9,10 +9,11 @@ import DeckSelector from '@/components/tarot/DeckSelector';
 import DailyPullSection from '@/components/dashboard/DailyPullSection';
 import RecentPullsList from '@/components/dashboard/RecentPullsList';
 import DataVisualization from '@/components/dashboard/DataVisualization';
-import ProfileBadge from '@/components/dashboard/ProfileBadge';
+import DeckToggle from '@/components/dashboard/DeckToggle';
 import UpgradePrompt from '@/components/dashboard/UpgradePrompt';
 import { getDaysUntilRetention, getMostPulledCard } from '@/utils/helpers';
 import { APP_CONFIG } from '@/utils/constants';
+import { userAPI } from '@/lib/api';
 
 const Dashboard: React.FC = () => {
   const { userProfile } = useAuth();
@@ -33,6 +34,20 @@ const Dashboard: React.FC = () => {
 
   // Get most pulled card info
   const mostPulledCard = getMostPulledCard(recentPulls);
+
+  // Handle deck change
+  const handleDeckChange = async (deckId: number) => {
+    if (!userProfile) return;
+    
+    try {
+      await userAPI.updateChosenDeck(userProfile.id, deckId);
+      // Refresh the user profile to get the updated chosen_deck_id
+      window.location.reload(); // Simple refresh for now, could be optimized later
+    } catch (err) {
+      console.error('Failed to update deck:', err);
+      // Could add a toast notification here
+    }
+  };
 
   if (loading) {
     return (
@@ -112,11 +127,13 @@ const Dashboard: React.FC = () => {
 
           {/* Right Column - Sidebar */}
           <div className="space-y-6">
-            {/* Profile Badge */}
-            <ProfileBadge 
-              mostPulledCard={mostPulledCard}
-              totalPulls={recentPulls.length}
-            />
+            {/* Deck Toggle - Full Height */}
+            <div className="h-full">
+              <DeckToggle
+                currentDeckId={userProfile?.chosen_deck_id}
+                onDeckChange={handleDeckChange}
+              />
+            </div>
             
             {/* Quick Stats */}
             <div className="card">

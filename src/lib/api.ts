@@ -207,6 +207,30 @@ export const pullAPI = {
   },
 
   createPull: async (pull: Omit<DailyPull, 'id' | 'created_at' | 'updated_at'>) => {
+    console.log('🔍 API: Creating pull with data:', pull);
+    
+    // Check if user is authenticated
+    const { data: { user }, error: authError } = await supabase.auth.getUser();
+    if (authError) {
+      console.error('❌ API: Auth error:', authError);
+      throw new Error(`Authentication error: ${authError.message}`);
+    }
+    
+    if (!user) {
+      console.error('❌ API: No authenticated user');
+      throw new Error('No authenticated user');
+    }
+    
+    console.log('✅ API: User authenticated:', user.id);
+    console.log('🔍 API: Pull user_id:', pull.user_id);
+    console.log('🔍 API: Auth user_id:', user.id);
+    
+    // Verify user_id matches authenticated user
+    if (pull.user_id !== user.id) {
+      console.error('❌ API: User ID mismatch');
+      throw new Error('User ID mismatch - security violation');
+    }
+    
     const { data, error } = await supabase
       .from('daily_pulls')
       .insert(pull)
@@ -216,7 +240,14 @@ export const pullAPI = {
       `)
       .single();
     
-    if (error) throw error;
+    if (error) {
+      console.error('❌ API: Insert error:', error);
+      console.error('❌ API: Error details:', error.details);
+      console.error('❌ API: Error hint:', error.hint);
+      throw error;
+    }
+    
+    console.log('✅ API: Pull created successfully:', data);
     return data;
   },
 
