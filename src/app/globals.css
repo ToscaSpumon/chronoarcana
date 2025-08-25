@@ -1,0 +1,153 @@
+@import url('https://fonts.googleapis.com/css2?family=Cinzel:wght@400;500;600;700&family=Inter:wght@300;400;500;600;700&display=swap');
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* Global styles for the Gothic but dreamy aesthetic */
+:root {
+  --deep-void: #0F0F1A;
+  --shadow-veil: #1A1A2B;
+  --midnight-aura: #2C2C3A;
+  --lunar-glow: #F0F0F5;
+  --astral-gold: #B89C6F;
+  --amethyst-dream: #7F58AF;
+  --emerald-whisper: #4E8D7F;
+  --sapphire-haze: #3F5F7F;
+}
+
+* {
+  box-sizing: border-box;
+  padding: 0;
+  margin: 0;
+}
+
+html,
+body {
+  max-width: 100vw;
+  overflow-x: hidden;
+  font-family: 'Inter', sans-serif;
+  background-color: var(--deep-void);
+  color: var(--lunar-glow);
+}
+
+body {
+  min-height: 100vh;
+  line-height: 1.6;
+}
+
+/* Custom scrollbar for dark theme */
+::-webkit-scrollbar {
+  width: 8px;
+}
+
+::-webkit-scrollbar-track {
+  background: var(--shadow-veil);
+}
+
+::-webkit-scrollbar-thumb {
+  background: var(--midnight-aura);
+  border-radius: 4px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: var(--astral-gold);
+}
+
+/* Custom button styles */
+@layer components {
+  .btn-primary {
+    @apply bg-astral-gold text-deep-void font-semibold px-6 py-3 rounded-lg transition-all duration-300 hover:bg-opacity-90 hover:scale-105 hover:shadow-lg;
+  }
+  
+  .btn-secondary {
+    @apply bg-shadow-veil text-lunar-glow border border-midnight-aura font-semibold px-6 py-3 rounded-lg transition-all duration-300 hover:bg-midnight-aura hover:border-lunar-glow;
+  }
+  
+  .btn-ghost {
+    @apply text-lunar-glow font-semibold px-6 py-3 rounded-lg transition-all duration-300 hover:bg-shadow-veil hover:text-astral-gold;
+  }
+}
+
+/* Card styles */
+.card {
+  background: var(--shadow-veil);
+  border: 1px solid var(--midnight-aura);
+  border-radius: 12px;
+  padding: 1.5rem;
+  transition: all 0.3s ease;
+}
+
+.card:hover {
+  border-color: var(--astral-gold);
+  box-shadow: 0 4px 20px rgba(184, 156, 111, 0.1);
+}
+
+/* Input styles */
+.input {
+  background: var(--shadow-veil);
+  border: 1px solid var(--midnight-aura);
+  color: var(--lunar-glow);
+  border-radius: 8px;
+  padding: 12px 16px;
+  transition: all 0.3s ease;
+}
+
+.input:focus {
+  outline: none;
+  border-color: var(--astral-gold);
+  box-shadow: 0 0 0 3px rgba(184, 156, 111, 0.1);
+}
+
+.input::placeholder {
+  color: #C0C0C8;
+}
+
+/* Animation utilities */
+.animate-glow {
+  animation: glow 2s ease-in-out infinite alternate;
+}
+
+@keyframes glow {
+  from {
+    box-shadow: 0 0 5px rgba(184, 156, 111, 0.5);
+  }
+  to {
+    box-shadow: 0 0 20px rgba(184, 156, 111, 0.8), 0 0 30px rgba(184, 156, 111, 0.4);
+  }
+}
+
+.animate-fade-in {
+  animation: fadeIn 0.5s ease-in-out;
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; transform: translateY(20px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+/* Tarot card specific styles */
+.tarot-card {
+  aspect-ratio: 2.5/3.5;
+  border-radius: 12px;
+  overflow: hidden;
+  transition: all 0.3s ease;
+  background: var(--shadow-veil);
+  border: 2px solid var(--midnight-aura);
+}
+
+.tarot-card:hover {
+  transform: translateY(-4px);
+  border-color: var(--astral-gold);
+  box-shadow: 0 8px 25px rgba(184, 156, 111, 0.2);
+}
+
+.tarot-card img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+/* Typography utilities */
+.text-cinzel {
+  font-family: 'Cinzel', serif;
+}
