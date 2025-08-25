@@ -90,11 +90,6 @@ const Dashboard: React.FC = () => {
           </div>
         </div>
 
-        {/* Free user upgrade prompt */}
-        {userProfile?.subscription_status === 'free' && daysUntilRetention !== null && (
-          <UpgradePrompt daysRemaining={daysUntilRetention} className="mb-8" />
-        )}
-
         {/* Main Dashboard Grid */}
         <div className="grid lg:grid-cols-3 gap-8">
           {/* Left Column - Main Actions */}
@@ -154,6 +149,13 @@ const Dashboard: React.FC = () => {
             </div>
           </div>
         </div>
+
+        {/* Free user upgrade prompt - moved to bottom */}
+        {userProfile?.subscription_status === 'free' && daysUntilRetention !== null && (
+          <div className="mt-12">
+            <UpgradePrompt daysRemaining={daysUntilRetention} />
+          </div>
+        )}
       </div>
 
       {/* Deck Selector Modal */}

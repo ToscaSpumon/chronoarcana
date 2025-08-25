@@ -1,18 +1,20 @@
 // Sample Tarot card data for seeding the database
-export const TAROT_DECKS = [
+const TAROT_DECKS = [
   {
     id: 1,
     name: 'Rider Waite',
     description: 'The classic and most widely recognized Tarot deck, perfect for beginners and experienced readers alike.',
+    image_url: '/assets/tarot_decks/rider_waite/deck_cover.jpg',
   },
   {
     id: 2,
     name: 'Thoth',
     description: 'Aleister Crowley\'s mystical and symbolically rich deck, offering deep esoteric insights.',
+    image_url: '/assets/tarot_decks/thoth/deck_cover.jpg',
   },
 ];
 
-export const RIDER_WAITE_CARDS = [
+const RIDER_WAITE_CARDS = [
   // Major Arcana
   {
     deck_id: 1,
@@ -94,7 +96,7 @@ export const RIDER_WAITE_CARDS = [
   },
 ];
 
-export const THOTH_CARDS = [
+const THOTH_CARDS = [
   // Major Arcana - Thoth deck variations
   {
     deck_id: 2,
@@ -119,3 +121,9 @@ export const THOTH_CARDS = [
     image_url: '/assets/tarot_decks/thoth/01_the_magus.jpg',
   },
 ];
+
+module.exports = {
+  TAROT_DECKS,
+  RIDER_WAITE_CARDS,
+  THOTH_CARDS,
+};

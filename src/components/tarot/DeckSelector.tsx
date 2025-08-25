@@ -32,9 +32,12 @@ const DeckSelector: React.FC<DeckSelectorProps> = ({ isOpen, onClose, onDeckSele
   const fetchDecks = async () => {
     try {
       setLoading(true);
+      console.log('🔍 Fetching tarot decks...');
       const fetchedDecks = await tarotAPI.getDecks();
+      console.log('📚 Fetched decks:', fetchedDecks);
       setDecks(fetchedDecks);
     } catch (err) {
+      console.error('❌ Error fetching decks:', err);
       setError(err instanceof Error ? err.message : 'Failed to fetch decks');
     } finally {
       setLoading(false);
@@ -84,36 +87,57 @@ const DeckSelector: React.FC<DeckSelectorProps> = ({ isOpen, onClose, onDeckSele
           </div>
         ) : (
           <div className="space-y-4">
-            {decks.map((deck) => (
-              <div
-                key={deck.id}
-                onClick={() => setSelectedDeckId(deck.id)}
-                className={`
-                  p-6 border-2 rounded-xl cursor-pointer transition-all duration-300
-                  ${selectedDeckId === deck.id 
-                    ? 'border-astral-gold bg-astral-gold bg-opacity-10' 
-                    : 'border-midnight-aura hover:border-astral-gold hover:bg-shadow-veil'
-                  }
-                `}
-              >
-                <div className="flex items-center justify-between">
-                  <div>
-                    <h3 className="text-xl font-cinzel font-semibold text-lunar-glow mb-2">
-                      {deck.name}
-                    </h3>
-                    {deck.description && (
-                      <p className="text-lunar-glow opacity-70">
-                        {deck.description}
-                      </p>
+            {console.log('🎴 Rendering decks:', decks)}
+            {decks.length === 0 ? (
+              <div className="text-center py-8">
+                <p className="text-lunar-glow opacity-70">No decks available</p>
+                <p className="text-sm text-lunar-glow opacity-50 mt-2">Decks count: {decks.length}</p>
+              </div>
+            ) : (
+              decks.map((deck) => (
+                <div
+                  key={deck.id}
+                  onClick={() => setSelectedDeckId(deck.id)}
+                  className={`
+                    p-6 border-2 rounded-xl cursor-pointer transition-all duration-300
+                    ${selectedDeckId === deck.id 
+                      ? 'border-astral-gold bg-astral-gold bg-opacity-10' 
+                      : 'border-midnight-aura hover:border-astral-gold hover:bg-shadow-veil'
+                    }
+                  `}
+                >
+                  <div className="flex items-center space-x-4">
+                    {/* Deck Image */}
+                    <div className="flex-shrink-0">
+                      {/* Placeholder for now - will show actual images once database is updated */}
+                      <div className="w-20 h-28 bg-gradient-to-br from-midnight-aura to-shadow-veil rounded-lg border border-astral-gold flex items-center justify-center">
+                        <div className="text-center">
+                          <div className="text-2xl mb-1">🃏</div>
+                          <span className="text-lunar-glow text-xs font-medium">{deck.name}</span>
+                        </div>
+                      </div>
+                    </div>
+                    
+                    {/* Deck Info */}
+                    <div className="flex-1">
+                      <h3 className="text-xl font-cinzel font-semibold text-lunar-glow mb-2">
+                        {deck.name}
+                      </h3>
+                      {deck.description && (
+                        <p className="text-lunar-glow opacity-70">
+                          {deck.description}
+                        </p>
+                      )}
+                    </div>
+                    
+                    {/* Selection Indicator */}
+                    {selectedDeckId === deck.id && (
+                      <CheckCircle className="w-8 h-8 text-astral-gold flex-shrink-0" />
                     )}
                   </div>
-                  
-                  {selectedDeckId === deck.id && (
-                    <CheckCircle className="w-8 h-8 text-astral-gold" />
-                  )}
                 </div>
-              </div>
-            ))}
+              ))
+            )}
           </div>
         )}
 

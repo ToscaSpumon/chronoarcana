@@ -145,12 +145,20 @@ export const userAPI = {
 // Tarot API
 export const tarotAPI = {
   getDecks: async (): Promise<TarotDeck[]> => {
+    console.log('🔍 API: Fetching decks from supabase...');
     const { data, error } = await supabase
       .from('tarot_decks')
       .select('*')
       .order('id');
     
-    if (error) throw error;
+    console.log('🔍 API: Supabase response:', { data, error });
+    
+    if (error) {
+      console.error('❌ API: Error fetching decks:', error);
+      throw error;
+    }
+    
+    console.log('✅ API: Successfully fetched decks:', data);
     return data || [];
   },
 
