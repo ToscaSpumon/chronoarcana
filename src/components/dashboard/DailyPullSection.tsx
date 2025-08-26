@@ -20,7 +20,7 @@ interface DailyPullSectionProps {
 
 const DailyPullSection: React.FC<DailyPullSectionProps> = ({ todaysPull, userDeckId }) => {
   const { userProfile } = useAuth();
-  const { updatePullNotes } = useTarotPulls();
+  const { updatePullNotes, needsTodayPull } = useTarotPulls();
   
   const [showDigitalPull, setShowDigitalPull] = useState(false);
   const [showPhysicalPull, setShowPhysicalPull] = useState(false);
@@ -41,6 +41,8 @@ const DailyPullSection: React.FC<DailyPullSectionProps> = ({ todaysPull, userDec
 
   // If user hasn't pulled today, show pull options
   if (!todaysPull) {
+    const { isNewDay, isFirstTime } = needsTodayPull();
+    
     return (
       <div className="card">
         <div className="text-center">
@@ -49,16 +51,34 @@ const DailyPullSection: React.FC<DailyPullSectionProps> = ({ todaysPull, userDec
           </div>
           
           <h2 className="text-3xl font-cinzel font-bold text-lunar-glow mb-4">
-            Today's Reading
+            {isNewDay ? 'New Day, New Insight' : 'Today\'s Reading'}
           </h2>
+          
+          {isNewDay && (
+            <div className="mb-4">
+              <span className="inline-flex items-center px-3 py-1 rounded-full text-sm font-medium bg-emerald-whisper bg-opacity-20 text-emerald-whisper border border-emerald-whisper border-opacity-30">
+                <span className="w-2 h-2 bg-emerald-whisper rounded-full mr-2 animate-pulse"></span>
+                New Day
+              </span>
+            </div>
+          )}
           
           <p className="text-lunar-glow opacity-70 mb-8 text-lg">
             {formatDate(getTodayDate())}
           </p>
           
           <p className="text-lunar-glow opacity-80 mb-8 max-w-md mx-auto">
-            Begin your day with insight. Choose how you'd like to draw your card for today.
+            {isNewDay 
+              ? 'A new day has dawned. Draw a fresh card to guide your journey ahead.'
+              : 'Begin your day with insight. Choose how you\'d like to draw your card for today.'
+            }
           </p>
+          
+          {isNewDay && (
+            <p className="text-astral-gold text-sm mb-6 opacity-80">
+              💫 Each day brings new energies and insights. Your daily card awaits!
+            </p>
+          )}
 
           <div className="flex flex-col sm:flex-row gap-4 justify-center">
             <Button

@@ -2,7 +2,20 @@ import { TarotCard, DailyPull } from '@/types';
 
 // Date formatting utilities
 export const formatDate = (date: Date | string): string => {
-  const d = new Date(date);
+  let d: Date;
+  
+  if (typeof date === 'string') {
+    // If it's a string in YYYY-MM-DD format, parse it as local date
+    if (/^\d{4}-\d{2}-\d{2}$/.test(date)) {
+      const [year, month, day] = date.split('-').map(Number);
+      d = new Date(year, month - 1, day); // month is 0-indexed
+    } else {
+      d = new Date(date);
+    }
+  } else {
+    d = date;
+  }
+  
   return d.toLocaleDateString('en-US', {
     year: 'numeric',
     month: 'long',
@@ -11,19 +24,39 @@ export const formatDate = (date: Date | string): string => {
 };
 
 export const formatDateShort = (date: Date | string): string => {
-  const d = new Date(date);
+  let d: Date;
+  
+  if (typeof date === 'string') {
+    // If it's a string in YYYY-MM-DD format, parse it as local date
+    if (/^\d{4}-\d{2}-\d{2}$/.test(date)) {
+      const [year, month, day] = date.split('-').map(Number);
+      d = new Date(year, month - 1, day); // month is 0-indexed
+    } else {
+      d = new Date(date);
+    }
+  } else {
+    d = date;
+  }
+  
   return d.toLocaleDateString('en-US', {
     month: 'short',
     day: 'numeric',
   });
 };
 
-// Get today's date in YYYY-MM-DD format (using local timezone)
+// Get today's date in YYYY-MM-DD format (using user's local timezone)
 export const getTodayDate = (): string => {
-  const today = new Date();
-  const year = today.getFullYear();
-  const month = String(today.getMonth() + 1).padStart(2, '0');
-  const day = String(today.getDate()).padStart(2, '0');
+  // Get the current date in the user's local timezone
+  const now = new Date();
+  
+  // Create a date string that respects the local timezone
+  // This ensures we get the date as it appears to the user in their timezone
+  const localDate = new Date(now.getTime() - (now.getTimezoneOffset() * 60000));
+  
+  const year = localDate.getFullYear();
+  const month = String(localDate.getMonth() + 1).padStart(2, '0');
+  const day = String(localDate.getDate()).padStart(2, '0');
+  
   return `${year}-${month}-${day}`;
 };
 

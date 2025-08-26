@@ -139,6 +139,10 @@ export const userAPI = {
       .eq('id', userId);
     
     if (error) throw error;
+    
+    // Note: We no longer automatically update existing daily pulls when changing decks
+    // This preserves the user's card of the day and any notes they've added
+    // Users can manually pull a new card if they want one from the new deck
   },
 };
 
@@ -190,10 +194,16 @@ export const tarotAPI = {
 // Daily Pull API
 export const pullAPI = {
   getTodaysPull: async (userId: string): Promise<DailyPull | null> => {
-    const today = new Date();
-    const year = today.getFullYear();
-    const month = String(today.getMonth() + 1).padStart(2, '0');
-    const day = String(today.getDate()).padStart(2, '0');
+    // Get the current date in the user's local timezone
+    const now = new Date();
+    
+    // Create a date string that respects the local timezone
+    // This ensures we get the date as it appears to the user in their timezone
+    const localDate = new Date(now.getTime() - (now.getTimezoneOffset() * 60000));
+    
+    const year = localDate.getFullYear();
+    const month = String(localDate.getMonth() + 1).padStart(2, '0');
+    const day = String(localDate.getDate()).padStart(2, '0');
     const todayStr = `${year}-${month}-${day}`;
     
     const { data, error } = await supabase
@@ -267,6 +277,11 @@ export const pullAPI = {
       throw insertError;
     }
     
+    // Log successful insertion
+    console.log('✅ API: Pull inserted successfully');
+    console.log('📝 Notes included:', !!pull.notes);
+    console.log('📝 Notes length:', pull.notes?.length || 0);
+    
     // Then fetch the created pull separately to avoid trigger conflicts
     const { data, error: selectError } = await supabase
       .from('daily_pulls')
@@ -314,14 +329,51 @@ export const pullAPI = {
   },
 
   updatePullNotes: async (pullId: string, notes: string) => {
+    // Validate input
+    if (!pullId) {
+      throw new Error('Pull ID is required to update notes');
+    }
+    
+    if (typeof notes !== 'string') {
+      throw new Error('Notes must be a string');
+    }
+    
+    console.log('🔍 API: Updating notes for pull:', pullId);
+    console.log('📝 Notes length:', notes.length);
+    
+    // Update the notes
     const { data, error } = await supabase
       .from('daily_pulls')
-      .update({ notes, updated_at: new Date().toISOString() })
+      .update({ 
+        notes: notes.trim(), // Trim whitespace
+        updated_at: new Date().toISOString() 
+      })
       .eq('id', pullId)
-      .select()
+      .select(`
+        id,
+        user_id,
+        card_id,
+        pull_date,
+        pull_type,
+        notes,
+        is_reversed,
+        created_at,
+        updated_at
+      `)
       .single();
     
-    if (error) throw error;
+    if (error) {
+      console.error('❌ API: Failed to update notes:', error);
+      throw new Error(`Failed to update notes: ${error.message}`);
+    }
+    
+    if (!data) {
+      throw new Error('Pull record not found after update');
+    }
+    
+    console.log('✅ API: Notes updated successfully for pull:', pullId);
+    console.log('📝 Updated notes length:', data.notes?.length || 0);
+    
     return data;
   },
 
@@ -362,5 +414,32 @@ export const pullAPI = {
     );
     
     return pullsWithCards;
+  },
+
+  // Get notes for a specific pull
+  getPullNotes: async (pullId: string): Promise<{ notes: string | null; updated_at: string }> => {
+    if (!pullId) {
+      throw new Error('Pull ID is required to retrieve notes');
+    }
+    
+    const { data, error } = await supabase
+      .from('daily_pulls')
+      .select('notes, updated_at')
+      .eq('id', pullId)
+      .single();
+    
+    if (error) {
+      console.error('❌ API: Failed to retrieve notes:', error);
+      throw new Error(`Failed to retrieve notes: ${error.message}`);
+    }
+    
+    if (!data) {
+      throw new Error('Pull record not found');
+    }
+    
+    return {
+      notes: data.notes,
+      updated_at: data.updated_at
+    };
   },
 };

@@ -11,6 +11,24 @@ export const useTarotPulls = () => {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
 
+  // Helper function to determine if user needs to pull for today
+  const needsTodayPull = () => {
+    if (!todaysPull) {
+      // Check if user has any recent pulls to determine if it's a new day or first time
+      const hasPulledBefore = recentPulls.length > 0;
+      return {
+        needsPull: true,
+        isNewDay: hasPulledBefore,
+        isFirstTime: !hasPulledBefore
+      };
+    }
+    return {
+      needsPull: false,
+      isNewDay: false,
+      isFirstTime: false
+    };
+  };
+
   const fetchTodaysPull = async () => {
     if (!user) return;
     
@@ -56,8 +74,25 @@ export const useTarotPulls = () => {
   };
 
   const updatePullNotes = async (pullId: string, notes: string) => {
+    // Validate input
+    if (!pullId) {
+      throw new Error('Pull ID is required to update notes');
+    }
+    
+    if (typeof notes !== 'string') {
+      throw new Error('Notes must be a string');
+    }
+    
     try {
+      console.log('🔍 Hook: Updating notes for pull:', pullId);
+      console.log('📝 Notes length:', notes.length);
+      
       const updatedPull = await pullAPI.updatePullNotes(pullId, notes);
+      
+      // Verify notes were updated correctly
+      if (updatedPull.notes !== notes.trim()) {
+        console.warn('⚠️ Hook: Notes may not have been updated correctly');
+      }
       
       // Update state
       if (todaysPull?.id === pullId) {
@@ -68,9 +103,31 @@ export const useTarotPulls = () => {
         prev.map(pull => pull.id === pullId ? updatedPull : pull)
       );
       
+      console.log('✅ Hook: Notes updated successfully for pull:', pullId);
       return updatedPull;
     } catch (err) {
+      console.error('❌ Hook: Failed to update notes:', err);
       throw new Error(err instanceof Error ? err.message : 'Failed to update notes');
+    }
+  };
+
+  const refresh = async () => {
+    if (!user) return;
+    setLoading(true);
+    await Promise.all([fetchTodaysPull(), fetchRecentPulls()]);
+    setLoading(false);
+  };
+
+  // Get notes for a specific pull
+  const getPullNotes = async (pullId: string) => {
+    if (!user || !pullId) return null;
+    
+    try {
+      const notesData = await pullAPI.getPullNotes(pullId);
+      return notesData;
+    } catch (err) {
+      console.error('Failed to retrieve notes:', err);
+      return null;
     }
   };
 
@@ -86,12 +143,29 @@ export const useTarotPulls = () => {
     }
   }, [user]);
 
-  const refresh = async () => {
+  // Check for date changes and refresh data if needed
+  useEffect(() => {
     if (!user) return;
-    setLoading(true);
-    await Promise.all([fetchTodaysPull(), fetchRecentPulls()]);
-    setLoading(false);
-  };
+    
+    const checkDateChange = () => {
+      const currentDate = getTodayDate();
+      const lastCheckedDate = localStorage.getItem('lastDateChecked');
+      
+      if (lastCheckedDate !== currentDate) {
+        // Date has changed, refresh the data
+        localStorage.setItem('lastDateChecked', currentDate);
+        refresh();
+      }
+    };
+    
+    // Check immediately
+    checkDateChange();
+    
+    // Set up interval to check every minute (in case user keeps the page open past midnight)
+    const interval = setInterval(checkDateChange, 60000);
+    
+    return () => clearInterval(interval);
+  }, [user, refresh]);
 
   return {
     todaysPull,
@@ -101,5 +175,7 @@ export const useTarotPulls = () => {
     createPull,
     updatePullNotes,
     refresh,
+    needsTodayPull,
+    getPullNotes,
   };
 };

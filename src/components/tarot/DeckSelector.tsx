@@ -87,7 +87,6 @@ const DeckSelector: React.FC<DeckSelectorProps> = ({ isOpen, onClose, onDeckSele
           </div>
         ) : (
           <div className="space-y-4">
-            {console.log('🎴 Rendering decks:', decks)}
             {decks.length === 0 ? (
               <div className="text-center py-8">
                 <p className="text-lunar-glow opacity-70">No decks available</p>

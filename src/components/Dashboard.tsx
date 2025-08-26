@@ -17,7 +17,7 @@ import { userAPI } from '@/lib/api';
 
 const Dashboard: React.FC = () => {
   const { userProfile } = useAuth();
-  const { todaysPull, recentPulls, loading, error } = useTarotPulls();
+  const { todaysPull, recentPulls, loading, error, needsTodayPull } = useTarotPulls();
   const [showDeckSelector, setShowDeckSelector] = useState(false);
 
   // Check if user needs to select a deck
@@ -84,6 +84,18 @@ const Dashboard: React.FC = () => {
           <h1 className="text-4xl md:text-5xl font-cinzel font-bold text-lunar-glow mb-4">
             Welcome back, {userProfile?.username}
           </h1>
+          
+          {/* New Day Notification */}
+          {!todaysPull && needsTodayPull().isNewDay && (
+            <div className="mb-6 p-4 bg-emerald-whisper bg-opacity-10 border border-emerald-whisper border-opacity-30 rounded-lg">
+              <div className="flex items-center space-x-3">
+                <div className="w-3 h-3 bg-emerald-whisper rounded-full animate-pulse"></div>
+                <p className="text-emerald-whisper font-medium">
+                  ✨ New day, new possibilities! Time to draw your daily card.
+                </p>
+              </div>
+            </div>
+          )}
           
           <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between">
             <p className="text-lunar-glow opacity-80 text-lg">
