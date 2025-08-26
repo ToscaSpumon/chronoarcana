@@ -128,7 +128,7 @@ const Dashboard: React.FC = () => {
           {/* Right Column - Sidebar */}
           <div className="space-y-8 relative">
             {/* Deck Toggle */}
-            <div className="relative z-10">
+            <div className="relative z-20">
               <DeckToggle
                 currentDeckId={userProfile?.chosen_deck_id}
                 onDeckChange={handleDeckChange}

@@ -90,7 +90,7 @@ const DeckToggle: React.FC<DeckToggleProps> = ({ currentDeckId, onDeckChange }) 
 
         {/* Dropdown Menu */}
         {isOpen && (
-          <div className="absolute right-0 top-full mt-2 w-80 bg-deep-void border border-midnight-aura rounded-lg shadow-lg z-10">
+          <div className="absolute right-0 top-full mt-2 w-80 bg-deep-void border border-midnight-aura rounded-lg shadow-lg z-[9999]">
             <div className="p-4">
               <h4 className="text-lunar-glow font-cinzel font-semibold mb-3">
                 Choose Your Deck
@@ -139,7 +139,7 @@ const DeckToggle: React.FC<DeckToggleProps> = ({ currentDeckId, onDeckChange }) 
   }
 
   return (
-    <div className="card p-4 deck-toggle flex flex-col max-h-96">
+    <div className="card p-4 deck-toggle flex flex-col overflow-visible">
       <div className="space-y-4">
         {/* Current Deck Cover - Full Width */}
         <div className="relative w-full">
@@ -147,7 +147,7 @@ const DeckToggle: React.FC<DeckToggleProps> = ({ currentDeckId, onDeckChange }) 
             <img
               src={currentDeck.image_url}
               alt={`${currentDeck.name} deck cover`}
-              className="w-full h-48 object-contain rounded-lg border border-midnight-aura bg-deep-void"
+              className="w-full h-32 object-contain rounded-lg border border-midnight-aura bg-deep-void"
               onError={(e) => {
                 // Fallback to placeholder if image fails to load
                 const target = e.target as HTMLImageElement;
@@ -157,7 +157,7 @@ const DeckToggle: React.FC<DeckToggleProps> = ({ currentDeckId, onDeckChange }) 
             />
           ) : null}
           {/* Fallback placeholder */}
-          <div className={`w-full h-48 bg-gradient-to-br from-midnight-aura to-shadow-veil rounded-lg border border-astral-gold flex items-center justify-center ${currentDeck.image_url ? 'hidden' : ''}`}>
+          <div className={`w-full h-32 bg-gradient-to-br from-midnight-aura to-shadow-veil rounded-lg border border-astral-gold flex items-center justify-center ${currentDeck.image_url ? 'hidden' : ''}`}>
             <div className="text-center">
               <div className="text-4xl mb-2">🃏</div>
               <span className="text-lunar-glow text-lg font-medium">{currentDeck.name}</span>
@@ -198,7 +198,7 @@ const DeckToggle: React.FC<DeckToggleProps> = ({ currentDeckId, onDeckChange }) 
 
             {/* Dropdown Menu */}
             {isOpen && (
-              <div className="absolute left-0 top-full mt-2 w-80 bg-deep-void border border-midnight-aura rounded-lg shadow-lg z-50">
+              <div className="absolute left-0 top-full mt-2 w-80 bg-deep-void border border-midnight-aura rounded-lg shadow-lg z-[9999]">
                 <div className="p-4">
                   <h4 className="text-lunar-glow font-cinzel font-semibold mb-3">
                     Choose Your Deck

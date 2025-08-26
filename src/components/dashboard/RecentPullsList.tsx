@@ -1,6 +1,6 @@
 'use client';
 
-import React from 'react';
+import React, { useState } from 'react';
 import { Calendar, Eye, FileText, Download } from 'lucide-react';
 import { DailyPull } from '@/types';
 import Button from '@/components/common/Button';
@@ -12,14 +12,73 @@ interface RecentPullsListProps {
 }
 
 const RecentPullsList: React.FC<RecentPullsListProps> = ({ pulls, isFreeTier }) => {
+  const [isExporting, setIsExporting] = useState(false);
+
   const handleViewPull = (pullId: string) => {
     // Navigate to pull detail view (future implementation)
     console.log('View pull:', pullId);
   };
 
-  const handleExportData = () => {
-    // Export CSV functionality (future implementation)
-    console.log('Export data');
+  const handleExportData = async () => {
+    if (pulls.length === 0) {
+      alert('No data to export');
+      return;
+    }
+
+    setIsExporting(true);
+
+    try {
+      // Create CSV content
+      const headers = [
+        'Date',
+        'Card Name',
+        'Card Number',
+        'Suit',
+        'Pull Type',
+        'Notes',
+        'Reversed',
+        'Keywords'
+      ];
+
+      const csvRows = [
+        headers.join(','),
+        ...pulls.map(pull => [
+          pull.pull_date,
+          pull.card?.card_name || 'Unknown',
+          pull.card?.card_number || '',
+          pull.card?.suit || '',
+          pull.pull_type,
+          pull.notes || '',
+          pull.is_reversed ? 'Yes' : 'No',
+          pull.card?.keywords || ''
+        ].map(field => `"${field}"`).join(','))
+      ];
+
+      const csvContent = csvRows.join('\n');
+
+      // Create and download the file
+      const blob = new Blob([csvContent], { type: 'text/csv;charset=utf-8;' });
+      const link = document.createElement('a');
+      
+      if (link.download !== undefined) {
+        const url = URL.createObjectURL(blob);
+        link.setAttribute('href', url);
+        link.setAttribute('download', `tarot-pulls-${new Date().toISOString().split('T')[0]}.csv`);
+        link.style.visibility = 'hidden';
+        document.body.appendChild(link);
+        link.click();
+        document.body.removeChild(link);
+        URL.revokeObjectURL(url); // Clean up
+      } else {
+        // Fallback for older browsers
+        window.open('data:text/csv;charset=utf-8,' + encodeURIComponent(csvContent));
+      }
+    } catch (error) {
+      console.error('Export failed:', error);
+      alert('Failed to export data. Please try again.');
+    } finally {
+      setIsExporting(false);
+    }
   };
 
   if (pulls.length === 0) {
@@ -54,10 +113,11 @@ const RecentPullsList: React.FC<RecentPullsListProps> = ({ pulls, isFreeTier }) 
             variant="ghost"
             size="sm"
             onClick={handleExportData}
+            disabled={isExporting}
             className="flex items-center space-x-2"
           >
-            <Download className="w-4 h-4" />
-            <span>Export CSV</span>
+            <Download className={`w-4 h-4 ${isExporting ? 'animate-spin' : ''}`} />
+            <span>{isExporting ? 'Exporting...' : 'Export CSV'}</span>
           </Button>
         </div>
       </div>
