@@ -4,6 +4,7 @@ import React, { useState, useEffect } from 'react';
 import { Calendar, Eye, FileText, Download } from 'lucide-react';
 import { DailyPull } from '@/types';
 import Button from '@/components/common/Button';
+import Modal from '@/components/common/Modal';
 import { formatDate, formatDateShort } from '@/utils/helpers';
 import CardDetailModal from './CardDetailModal';
 import InteractiveCalendar from './InteractiveCalendar';
@@ -21,6 +22,9 @@ const RecentPullsList: React.FC<RecentPullsListProps> = ({ pulls, pulls60Days, i
   const [selectedPull, setSelectedPull] = useState<DailyPull | null>(null);
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [localPulls, setLocalPulls] = useState<DailyPull[]>(pulls);
+  const [isCalendarModalOpen, setIsCalendarModalOpen] = useState(false);
+  const [calendarPulls, setCalendarPulls] = useState<DailyPull[]>([]);
+  const [calendarDate, setCalendarDate] = useState<Date | null>(null);
 
   // Update localPulls when props change
   useEffect(() => {
@@ -40,6 +44,25 @@ const RecentPullsList: React.FC<RecentPullsListProps> = ({ pulls, pulls60Days, i
     setSelectedPull(null);
   };
 
+  const handleCalendarDateClick = (date: Date, pulls: DailyPull[]) => {
+    if (pulls.length === 1) {
+      // If only one pull, directly open the card detail modal
+      setSelectedPull(pulls[0]);
+      setIsModalOpen(true);
+    } else {
+      // If multiple pulls, show the intermediate modal
+      setCalendarDate(date);
+      setCalendarPulls(pulls);
+      setIsCalendarModalOpen(true);
+    }
+  };
+
+  const handleCloseCalendarModal = () => {
+    setIsCalendarModalOpen(false);
+    setCalendarPulls([]);
+    setCalendarDate(null);
+  };
+
   const handleUpdateNotes = async (pullId: string, notes: string) => {
     try {
       // Update notes in the database
@@ -57,6 +80,13 @@ const RecentPullsList: React.FC<RecentPullsListProps> = ({ pulls, pulls60Days, i
       // This ensures the notes icon shows up in the list
       setLocalPulls(prevPulls => 
         prevPulls.map(pull => 
+          pull.id === pullId ? { ...pull, notes: notes } : pull
+        )
+      );
+      
+      // Update the calendar pulls state if the updated pull is in there
+      setCalendarPulls(prevCalendarPulls => 
+        prevCalendarPulls.map(pull => 
           pull.id === pullId ? { ...pull, notes: notes } : pull
         )
       );
@@ -235,7 +265,10 @@ const RecentPullsList: React.FC<RecentPullsListProps> = ({ pulls, pulls60Days, i
       </div>
 
       {/* Interactive Calendar Section */}
-      <InteractiveCalendar pulls={pulls60Days} />
+      <InteractiveCalendar 
+        pulls={pulls60Days} 
+        onDateClick={handleCalendarDateClick}
+      />
 
       {/* Card Detail Modal */}
       <CardDetailModal
@@ -244,6 +277,99 @@ const RecentPullsList: React.FC<RecentPullsListProps> = ({ pulls, pulls60Days, i
         pull={selectedPull}
         onUpdateNotes={handleUpdateNotes}
       />
+
+      {/* Calendar Date Modal - for multiple pulls on same date */}
+      {isCalendarModalOpen && calendarDate && (
+        <Modal
+          isOpen={isCalendarModalOpen}
+          onClose={handleCloseCalendarModal}
+          title={`Pulls for ${calendarDate.toLocaleDateString('en-US', { 
+            weekday: 'long', 
+            year: 'numeric', 
+            month: 'long', 
+            day: 'numeric' 
+          })}`}
+          size="lg"
+        >
+          <div className="space-y-4">
+            <div className="text-center mb-6">
+              <p className="text-lunar-glow opacity-70">
+                {calendarPulls.length} pull{calendarPulls.length > 1 ? 's' : ''} on this date
+              </p>
+            </div>
+            
+            <div className="space-y-3">
+              {calendarPulls.map((pull, index) => (
+                <div
+                  key={pull.id}
+                  onClick={() => {
+                    setSelectedPull(pull);
+                    setIsModalOpen(true);
+                    handleCloseCalendarModal();
+                  }}
+                  className="flex items-center space-x-4 p-4 bg-midnight-aura rounded-lg hover:bg-shadow-veil transition-colors cursor-pointer group border border-transparent hover:border-emerald-whisper hover:border-opacity-30"
+                >
+                  <div className="w-16 h-24 bg-shadow-veil border border-midnight-aura rounded-lg flex items-center justify-center flex-shrink-0">
+                    {pull.card?.image_url ? (
+                      <img
+                        src={pull.card.image_url}
+                        alt={pull.card.card_name}
+                        className={`w-full h-full object-contain rounded-lg bg-deep-void ${
+                          pull.is_reversed ? 'rotate-180' : ''
+                        }`}
+                      />
+                    ) : (
+                      <div className="text-xs text-lunar-glow opacity-50 text-center">
+                        {pull.card?.card_name}
+                      </div>
+                    )}
+                  </div>
+                  
+                  <div className="flex-1">
+                    <h4 className="font-semibold text-lunar-glow group-hover:text-astral-gold transition-colors">
+                      {pull.card?.card_name || 'Unknown Card'}
+                    </h4>
+                    <div className="flex items-center space-x-2 mt-2">
+                      <span className={`text-xs px-2 py-1 rounded-full ${
+                        pull.pull_type === 'digital' 
+                          ? 'bg-astral-gold bg-opacity-20 text-astral-gold'
+                          : 'bg-emerald-whisper bg-opacity-20 text-emerald-whisper'
+                      }`}>
+                        {pull.pull_type}
+                      </span>
+                      {pull.is_reversed && (
+                        <span className="text-xs px-2 py-1 rounded-full bg-crimson-stain bg-opacity-20 text-crimson-stain">
+                          Reversed
+                        </span>
+                      )}
+                      {pull.notes && (
+                        <span className="text-xs px-2 py-1 rounded-full bg-lunar-glow bg-opacity-20 text-lunar-glow">
+                          📝 Notes
+                        </span>
+                      )}
+                    </div>
+                    {pull.notes && (
+                      <p className="text-sm text-lunar-glow opacity-70 mt-2 line-clamp-2">
+                        {pull.notes}
+                      </p>
+                    )}
+                  </div>
+                  
+                  <div className="text-lunar-glow opacity-50 group-hover:opacity-100 transition-opacity">
+                    <Eye className="w-5 h-5" />
+                  </div>
+                </div>
+              ))}
+            </div>
+            
+            <div className="text-center pt-4 border-t border-midnight-aura">
+              <p className="text-sm text-lunar-glow opacity-50">
+                Click on any pull to view full details and edit notes
+              </p>
+            </div>
+          </div>
+        </Modal>
+      )}
     </div>
   );
 };

@@ -95,7 +95,7 @@ const DashboardWithDock: React.FC = () => {
     },
     {
       icon: <History className="w-6 h-6 text-astral-gold" />,
-      label: 'Recent Pulls',
+      label: 'Pull History',
       onClick: () => setActiveSection('recent-pulls'),
       className: activeSection === 'recent-pulls' ? 'ring-2 ring-astral-gold' : ''
     },
