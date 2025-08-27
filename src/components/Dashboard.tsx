@@ -54,6 +54,25 @@ const Dashboard: React.FC = () => {
     await refresh(); // Refresh the data to show the new pull immediately
   };
 
+  // Handle when notes are updated for a pull
+  const handleNotesUpdated = (pullId: string, notes: string) => {
+    // Update the recentPulls array to reflect the notes change
+    // This ensures the notes icon shows up immediately without refreshing
+    const updatedRecentPulls = recentPulls.map(pull => 
+      pull.id === pullId ? { ...pull, notes: notes } : pull
+    );
+    
+    // Update the recentPulls60Days array as well
+    const updatedRecentPulls60Days = recentPulls60Days.map(pull => 
+      pull.id === pullId ? { ...pull, notes: notes } : pull
+    );
+    
+    // Force a re-render by updating the state
+    // Note: In a more sophisticated setup, you might want to use a state management solution
+    // For now, we'll trigger a refresh to get the updated data
+    refresh();
+  };
+
   if (loading) {
     return (
       <>
@@ -138,6 +157,7 @@ const Dashboard: React.FC = () => {
               pulls={recentPulls}
               pulls60Days={recentPulls60Days}
               isFreeTier={userProfile?.subscription_status === 'free'}
+              onNotesUpdated={handleNotesUpdated}
             />
             
             {/* Data Visualization */}

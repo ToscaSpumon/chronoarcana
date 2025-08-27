@@ -1,30 +1,79 @@
 'use client';
 
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { Calendar, Eye, FileText, Download } from 'lucide-react';
 import { DailyPull } from '@/types';
 import Button from '@/components/common/Button';
 import { formatDate, formatDateShort } from '@/utils/helpers';
+import CardDetailModal from './CardDetailModal';
+import { pullAPI } from '@/lib/api';
 
 interface RecentPullsListProps {
   pulls: DailyPull[]; // Last 7 days for display
   pulls60Days: DailyPull[]; // Last 60 days for export
   isFreeTier: boolean;
+  onNotesUpdated?: (pullId: string, notes: string) => void;
 }
 
-const RecentPullsList: React.FC<RecentPullsListProps> = ({ pulls, isFreeTier }) => {
+const RecentPullsList: React.FC<RecentPullsListProps> = ({ pulls, pulls60Days, isFreeTier, onNotesUpdated }) => {
   const [isExporting, setIsExporting] = useState(false);
+  const [selectedPull, setSelectedPull] = useState<DailyPull | null>(null);
+  const [isModalOpen, setIsModalOpen] = useState(false);
+  const [localPulls, setLocalPulls] = useState<DailyPull[]>(pulls);
 
-    // This component now shows only the last 7 days of pulls
+  // Update localPulls when props change
+  useEffect(() => {
+    setLocalPulls(pulls);
+  }, [pulls]);
+
+  // This component now shows only the last 7 days of pulls
   // For historical data beyond 7 days, users will use the calendar section
 
-  const handleViewPull = (pullId: string) => {
-    // Navigate to pull detail view (future implementation)
-    console.log('View pull:', pullId);
+  const handleViewPull = (pull: DailyPull) => {
+    setSelectedPull(pull);
+    setIsModalOpen(true);
+  };
+
+  const handleCloseModal = () => {
+    setIsModalOpen(false);
+    setSelectedPull(null);
+  };
+
+  const handleUpdateNotes = async (pullId: string, notes: string) => {
+    try {
+      // Update notes in the database
+      await pullAPI.updatePullNotes(pullId, notes);
+      
+      // Update the local state to reflect the change
+      if (selectedPull) {
+        setSelectedPull({
+          ...selectedPull,
+          notes: notes
+        });
+      }
+      
+      // Update the local pulls state to reflect the change
+      // This ensures the notes icon shows up in the list
+      setLocalPulls(prevPulls => 
+        prevPulls.map(pull => 
+          pull.id === pullId ? { ...pull, notes: notes } : pull
+        )
+      );
+      
+      // Notify parent component about the notes update
+      onNotesUpdated?.(pullId, notes);
+    } catch (error) {
+      console.error('Failed to update notes:', error);
+      // You could add a toast notification here
+      throw error; // Re-throw to let the modal handle the error
+    }
   };
 
   const handleExportData = async () => {
-    if (pulls60Days.length === 0) {
+    // Use pulls60Days for export if available, otherwise fall back to localPulls
+    const exportData = pulls60Days && pulls60Days.length > 0 ? pulls60Days : localPulls;
+    
+    if (exportData.length === 0) {
       alert('No data to export');
       return;
     }
@@ -46,7 +95,7 @@ const RecentPullsList: React.FC<RecentPullsListProps> = ({ pulls, isFreeTier }) 
 
       const csvRows = [
         headers.join(','),
-        ...pulls60Days.map(pull => [
+        ...exportData.map(pull => [
           pull.pull_date,
           pull.card?.card_name || 'Unknown',
           pull.card?.card_number || '',
@@ -67,7 +116,8 @@ const RecentPullsList: React.FC<RecentPullsListProps> = ({ pulls, isFreeTier }) 
       if (link.download !== undefined) {
         const url = URL.createObjectURL(blob);
         link.setAttribute('href', url);
-        link.setAttribute('download', `tarot-pulls-60-days-${new Date().toISOString().split('T')[0]}.csv`);
+        const dataType = pulls60Days && pulls60Days.length > 0 ? '60-days' : '7-days';
+        link.setAttribute('download', `tarot-pulls-${dataType}-${new Date().toISOString().split('T')[0]}.csv`);
         link.style.visibility = 'hidden';
         document.body.appendChild(link);
         link.click();
@@ -85,7 +135,7 @@ const RecentPullsList: React.FC<RecentPullsListProps> = ({ pulls, isFreeTier }) 
     }
   };
 
-  if (pulls.length === 0) {
+  if (localPulls.length === 0) {
     return (
       <div className="card text-center">
         <div className="w-16 h-16 mx-auto mb-4 bg-amethyst-dream bg-opacity-20 rounded-full flex items-center justify-center">
@@ -127,10 +177,10 @@ const RecentPullsList: React.FC<RecentPullsListProps> = ({ pulls, isFreeTier }) 
       </div>
 
       <div className="space-y-3">
-        {pulls.slice(0, 10).map((pull) => (
+        {localPulls.slice(0, 10).map((pull) => (
           <div
             key={pull.id}
-            onClick={() => handleViewPull(pull.id)}
+            onClick={() => handleViewPull(pull)}
             className="flex items-center justify-between p-4 bg-midnight-aura rounded-lg hover:bg-shadow-veil transition-colors cursor-pointer group"
           >
             <div className="flex items-center space-x-4">
@@ -180,13 +230,21 @@ const RecentPullsList: React.FC<RecentPullsListProps> = ({ pulls, isFreeTier }) 
         ))}
       </div>
 
-      {pulls.length > 10 && (
+      {localPulls.length > 10 && (
         <div className="mt-6 text-center">
           <Button variant="ghost" size="sm">
             View Calendar for More History
           </Button>
         </div>
       )}
+
+      {/* Card Detail Modal */}
+      <CardDetailModal
+        isOpen={isModalOpen}
+        onClose={handleCloseModal}
+        pull={selectedPull}
+        onUpdateNotes={handleUpdateNotes}
+      />
     </div>
   );
 };
