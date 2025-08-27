@@ -2,11 +2,14 @@
   position: relative;
   width: 100%;
   height: 100%;
-  perspective: 800px;
+  perspective: 1200px;
   display: flex;
   flex-direction: column;
   align-items: center;
   justify-content: center;
+  overflow: visible;
+  margin: 0;
+  padding: 0;
 }
 
 .tilted-card-mobile-alert {
@@ -37,25 +40,34 @@
   position: relative;
   transform-style: preserve-3d;
   transition: transform 0.1s ease-out;
+  width: 100%;
+  height: 100%;
+  margin: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transform-origin: center center;
 }
 
 .tilted-card-img {
-  position: absolute;
-  top: 0;
-  left: 0;
+  position: relative;
+  width: 100%;
+  height: 100%;
   object-fit: cover;
   border-radius: 15px;
   will-change: transform;
   transform: translateZ(0);
   box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
   border: 2px solid rgba(139, 69, 19, 0.3);
-  transition: box-shadow 0.3s ease;
+  transition: all 0.3s ease;
   filter: drop-shadow(0 4px 8px rgba(0, 0, 0, 0.2));
+  background-color: transparent;
 }
 
 .tilted-card-img:hover {
-  box-shadow: 0 12px 40px rgba(0, 0, 0, 0.4);
-  filter: drop-shadow(0 8px 16px rgba(139, 69, 19, 0.3));
+  box-shadow: 0 20px 60px rgba(0, 0, 0, 0.5);
+  filter: drop-shadow(0 12px 24px rgba(139, 69, 19, 0.4));
+  transform: translateZ(20px);
 }
 
 .tilted-card-overlay {
@@ -64,7 +76,7 @@
   left: 0;
   z-index: 2;
   will-change: transform;
-  transform: translateZ(30px);
+  transform: translateZ(40px);
 }
 
 .tilted-card-caption {
@@ -89,21 +101,7 @@
   box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
 }
 
-/* Add a subtle glow effect for the card */
+/* Remove the glow effect to prevent any interference with alignment */
 .tilted-card-inner::before {
-  content: '';
-  position: absolute;
-  top: -2px;
-  left: -2px;
-  right: -2px;
-  bottom: -2px;
-  background: linear-gradient(45deg, rgba(139, 69, 19, 0.1), rgba(251, 191, 36, 0.1));
-  border-radius: 17px;
-  z-index: -1;
-  opacity: 0;
-  transition: opacity 0.3s ease;
-}
-
-.tilted-card-inner:hover::before {
-  opacity: 1;
+  display: none;
 }

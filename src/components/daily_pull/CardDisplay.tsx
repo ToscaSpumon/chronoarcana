@@ -42,24 +42,48 @@ const CardDisplay: React.FC<CardDisplayProps> = ({
 
   // Convert size classes to pixel values for TiltedCard
   const getTiltedCardDimensions = () => {
+    // Tarot cards typically have a 2.75:1.75 ratio (width:height)
+    const tarotRatio = 2.75 / 1.75;
+    
     switch (size) {
       case 'sm':
-        return { width: '128px', height: '176px' };
+        return { 
+          width: '140px', 
+          height: '224px', // Adjusted for tarot ratio
+          containerHeight: '260px' // Extra height for 3D effects
+        };
       case 'md':
-        return { width: '192px', height: '256px' };
+        return { 
+          width: '210px', 
+          height: '336px', // Adjusted for tarot ratio
+          containerHeight: '400px' // Extra height for 3D effects
+        };
       case 'lg':
-        return { width: '224px', height: '320px' };
+        return { 
+          width: '245px', 
+          height: '392px', // Adjusted for tarot ratio
+          containerHeight: '460px' // Extra height for 3D effects
+        };
       default:
-        return { width: '192px', height: '256px' };
+        return { 
+          width: '210px', 
+          height: '336px', // Adjusted for tarot ratio
+          containerHeight: '400px' // Extra height for 3D effects
+        };
     }
   };
 
-  const { width, height } = getTiltedCardDimensions();
+  const { width, height, containerHeight } = getTiltedCardDimensions();
 
   return (
     <div className={cn('space-y-6', className)}>
       {/* Card Image with TiltedCard */}
-      <div className="flex justify-center">
+      <div className="flex justify-center" style={{ 
+        height: containerHeight,
+        width: width,
+        margin: '0 auto',
+        padding: '20px'
+      }}>
         {displayCard.image_url ? (
           enableTiltedCard ? (
             <TiltedCard
@@ -73,7 +97,7 @@ const CardDisplay: React.FC<CardDisplayProps> = ({
               scaleOnHover={1.05}
               rotateAmplitude={12}
               showMobileWarning={false}
-              showTooltip={true}
+              showTooltip={false}
             />
           ) : (
             <div

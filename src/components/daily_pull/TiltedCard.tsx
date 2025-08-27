@@ -115,6 +115,7 @@ export default function TiltedCard({
           rotateX,
           rotateY,
           scale,
+          transformStyle: 'preserve-3d',
         }}
       >
         <motion.img
@@ -124,12 +125,16 @@ export default function TiltedCard({
           style={{
             width: imageWidth,
             height: imageHeight,
+            transform: 'translateZ(0)',
           }}
         />
 
         {displayOverlayContent && overlayContent && (
           <motion.div
             className="tilted-card-overlay"
+            style={{
+              transform: 'translateZ(40px)',
+            }}
           >
             {overlayContent}
           </motion.div>
