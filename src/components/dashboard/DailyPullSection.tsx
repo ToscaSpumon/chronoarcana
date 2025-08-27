@@ -209,6 +209,7 @@ const DailyPullSection: React.FC<DailyPullSectionProps> = ({
             pull={todaysPull}
             showMeanings={false}
             className="mb-6"
+            enableTiltedCard={true}
           />
 
           <div className="text-center">

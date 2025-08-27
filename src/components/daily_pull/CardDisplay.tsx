@@ -3,6 +3,7 @@
 import React from 'react';
 import { TarotCard, DailyPull } from '@/types';
 import { cn } from '@/utils/cn';
+import TiltedCard from './TiltedCard';
 
 interface CardDisplayProps {
   card?: TarotCard;
@@ -11,6 +12,7 @@ interface CardDisplayProps {
   animate?: boolean;
   className?: string;
   size?: 'sm' | 'md' | 'lg';
+  enableTiltedCard?: boolean;
 }
 
 const CardDisplay: React.FC<CardDisplayProps> = ({
@@ -20,6 +22,7 @@ const CardDisplay: React.FC<CardDisplayProps> = ({
   animate = false,
   className,
   size = 'md',
+  enableTiltedCard = true,
 }) => {
   const displayCard = card || pull?.card;
   
@@ -37,24 +40,64 @@ const CardDisplay: React.FC<CardDisplayProps> = ({
     lg: 'w-56 h-80',
   };
 
+  // Convert size classes to pixel values for TiltedCard
+  const getTiltedCardDimensions = () => {
+    switch (size) {
+      case 'sm':
+        return { width: '128px', height: '176px' };
+      case 'md':
+        return { width: '192px', height: '256px' };
+      case 'lg':
+        return { width: '224px', height: '320px' };
+      default:
+        return { width: '192px', height: '256px' };
+    }
+  };
+
+  const { width, height } = getTiltedCardDimensions();
+
   return (
     <div className={cn('space-y-6', className)}>
-      {/* Card Image */}
+      {/* Card Image with TiltedCard */}
       <div className="flex justify-center">
-        <div
-          className={cn(
-            'tarot-card',
-            sizeClasses[size],
-            animate && 'animate-fade-in'
-          )}
-        >
-          {displayCard.image_url ? (
-            <img
-              src={displayCard.image_url}
-              alt={displayCard.card_name}
-              className="w-full h-full object-contain bg-deep-void"
+        {displayCard.image_url ? (
+          enableTiltedCard ? (
+            <TiltedCard
+              imageSrc={displayCard.image_url}
+              altText={displayCard.card_name}
+              captionText={`${displayCard.card_name}${displayCard.suit ? ` - ${displayCard.suit}` : ''}`}
+              containerHeight={height}
+              containerWidth={width}
+              imageHeight={height}
+              imageWidth={width}
+              scaleOnHover={1.05}
+              rotateAmplitude={12}
+              showMobileWarning={false}
+              showTooltip={true}
             />
           ) : (
+            <div
+              className={cn(
+                'tarot-card',
+                sizeClasses[size],
+                animate && 'animate-fade-in'
+              )}
+            >
+              <img
+                src={displayCard.image_url}
+                alt={displayCard.card_name}
+                className="w-full h-full object-contain bg-deep-void rounded-lg"
+              />
+            </div>
+          )
+        ) : (
+          <div
+            className={cn(
+              'tarot-card',
+              sizeClasses[size],
+              animate && 'animate-fade-in'
+            )}
+          >
             <div className="w-full h-full bg-gradient-to-br from-shadow-veil to-midnight-aura flex flex-col items-center justify-center p-4">
               <h3 className="text-lunar-glow text-center font-cinzel font-semibold text-lg mb-2">
                 {displayCard.card_name}
@@ -63,8 +106,8 @@ const CardDisplay: React.FC<CardDisplayProps> = ({
                 <p className="text-astral-gold text-sm">{displayCard.suit}</p>
               )}
             </div>
-          )}
-        </div>
+          </div>
+        )}
       </div>
 
       {/* Card Name and Number */}

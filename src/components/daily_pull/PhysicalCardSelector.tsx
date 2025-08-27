@@ -340,6 +340,7 @@ const PhysicalCardSelector: React.FC<PhysicalCardSelectorProps> = ({ isOpen, onC
                   card={selectedCard} 
                   showMeanings={false}
                   className="mb-4"
+                  enableTiltedCard={true}
                 />
               </div>
             )}

@@ -207,6 +207,7 @@ const DigitalPullModal: React.FC<DigitalPullModalProps> = ({ isOpen, onClose, de
               card={selectedCard} 
               showMeanings={true}
               animate={true}
+              enableTiltedCard={true}
             />
             <div className="flex justify-center space-x-4">
               <Button
