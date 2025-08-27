@@ -64,6 +64,29 @@ export interface ChartData {
   }>;
 }
 
+// Dock component types
+export interface DockItem {
+  icon: React.ReactNode;
+  label: string;
+  onClick: () => void;
+  className?: string;
+}
+
+export interface DockProps {
+  items: DockItem[];
+  className?: string;
+  spring?: {
+    mass: number;
+    stiffness: number;
+    damping: number;
+  };
+  magnification?: number;
+  distance?: number;
+  panelHeight?: number;
+  dockHeight?: number;
+  baseItemSize?: number;
+}
+
 export type SubscriptionStatus = 'free' | 'premium';
 export type PullType = 'digital' | 'physical';
 export type GraphType = 'bar' | 'pie';
