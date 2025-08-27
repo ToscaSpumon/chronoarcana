@@ -143,9 +143,6 @@ const RecentPullsList: React.FC<RecentPullsListProps> = ({ pulls, pulls60Days, i
 
   return (
     <div className="space-y-8">
-      {/* Interactive Calendar Section */}
-      <InteractiveCalendar pulls={pulls60Days} />
-
       {/* Recent Pulls List Section */}
       <div className="card">
         <div className="flex items-center justify-between mb-6">
@@ -231,11 +228,14 @@ const RecentPullsList: React.FC<RecentPullsListProps> = ({ pulls, pulls60Days, i
               Showing 10 of {localPulls.length} recent pulls
             </p>
             <p className="text-xs text-lunar-glow opacity-50">
-              Use the calendar above to explore your full reading history
+              Use the calendar below to explore your full reading history
             </p>
           </div>
         )}
       </div>
+
+      {/* Interactive Calendar Section */}
+      <InteractiveCalendar pulls={pulls60Days} />
 
       {/* Card Detail Modal */}
       <CardDetailModal

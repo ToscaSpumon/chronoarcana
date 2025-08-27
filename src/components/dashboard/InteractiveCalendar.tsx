@@ -32,14 +32,23 @@ const InteractiveCalendar: React.FC<InteractiveCalendarProps> = ({
   const pullsByDate = useMemo(() => {
     const grouped: Record<string, DailyPull[]> = {};
     pulls.forEach(pull => {
-      const dateKey = format(new Date(pull.pull_date), 'yyyy-MM-dd');
+      // Parse the date string more reliably by splitting it and creating a date
+      // This avoids timezone issues completely
+      const [year, month, day] = pull.pull_date.split('T')[0].split('-').map(Number);
+      const dateKey = `${year}-${month.toString().padStart(2, '0')}-${day.toString().padStart(2, '0')}`;
+      
       if (!grouped[dateKey]) {
         grouped[dateKey] = [];
       }
       grouped[dateKey].push(pull);
     });
+    
+    // Debug: log all date keys
+    console.log('All date keys:', Object.keys(grouped));
+    console.log('Current date:', format(currentDate, 'yyyy-MM-dd'));
+    
     return grouped;
-  }, [pulls]);
+  }, [pulls, currentDate]);
 
   // Navigation functions
   const goToPreviousMonth = () => setCurrentDate(subMonths(currentDate, 1));
@@ -94,9 +103,15 @@ const InteractiveCalendar: React.FC<InteractiveCalendarProps> = ({
   // Check if date is in current month
   const isCurrentMonth = (date: Date) => isSameMonth(date, currentDate);
 
-  // Get month statistics
+  // Get month statistics with proper date handling
   const monthStats = useMemo(() => {
-    const monthPulls = pulls.filter(pull => isSameMonth(new Date(pull.pull_date), currentDate));
+    const monthPulls = pulls.filter(pull => {
+      // Use the same reliable date parsing method
+      const [year, month, day] = pull.pull_date.split('T')[0].split('-').map(Number);
+      const pullDate = new Date(year, month - 1, day); // month is 0-indexed in Date constructor
+      return isSameMonth(pullDate, currentDate);
+    });
+    
     const totalPulls = monthPulls.length;
     const digitalPulls = monthPulls.filter(pull => pull.pull_type === 'digital').length;
     const physicalPulls = monthPulls.filter(pull => pull.pull_type === 'physical').length;
