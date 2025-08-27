@@ -9,7 +9,7 @@ import LoadingSpinner from '@/components/common/LoadingSpinner';
 
 interface DeckToggleProps {
   currentDeckId?: number;
-  onDeckChange: (deckId: number) => void;
+  onDeckChange?: (deckId: number) => void;
 }
 
 const DeckToggle: React.FC<DeckToggleProps> = ({ currentDeckId, onDeckChange }) => {
@@ -54,7 +54,7 @@ const DeckToggle: React.FC<DeckToggleProps> = ({ currentDeckId, onDeckChange }) 
   };
 
   const handleDeckSelect = (deckId: number) => {
-    onDeckChange(deckId);
+    onDeckChange?.(deckId);
     setIsOpen(false);
   };
 

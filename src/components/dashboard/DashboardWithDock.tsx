@@ -106,12 +106,6 @@ const DashboardWithDock: React.FC = () => {
       className: activeSection === 'analytics' ? 'ring-2 ring-crimson-stain' : ''
     },
     {
-      icon: <BookOpen className="w-6 h-6 text-lunar-glow" />,
-      label: 'Deck Settings',
-      onClick: () => setActiveSection('deck-settings'),
-      className: activeSection === 'deck-settings' ? 'ring-2 ring-lunar-glow' : ''
-    },
-    {
       icon: <Crown className="w-6 h-6 text-astral-gold" />,
       label: 'Upgrade',
       onClick: () => setActiveSection('upgrade'),
@@ -152,6 +146,8 @@ const DashboardWithDock: React.FC = () => {
             todaysPull={todaysPull}
             userDeckId={userProfile?.chosen_deck_id}
             onPullCreated={handlePullCreated}
+            onDeckChange={handleDeckChange}
+            recentPulls60Days={recentPulls60Days}
           />
         );
       case 'recent-pulls':
@@ -166,43 +162,6 @@ const DashboardWithDock: React.FC = () => {
       case 'analytics':
         return (
           <DataVisualization pulls={recentPulls60Days} />
-        );
-      case 'deck-settings':
-        return (
-          <div className="space-y-6">
-            <DeckToggle
-              currentDeckId={userProfile?.chosen_deck_id}
-              onDeckChange={handleDeckChange}
-            />
-            <div className="card">
-              <h3 className="text-xl font-cinzel font-semibold text-lunar-glow mb-4">
-                Quick Stats
-              </h3>
-              <div className="space-y-3">
-                <div className="flex justify-between">
-                  <span className="text-lunar-glow opacity-70">Total Pulls (60 days)</span>
-                  <span className="text-astral-gold font-semibold">{recentPulls60Days.length}</span>
-                </div>
-                <div className="flex justify-between">
-                  <span className="text-lunar-glow opacity-70">This Month</span>
-                  <span className="text-astral-gold font-semibold">
-                    {recentPulls60Days.filter(pull => {
-                      const pullDate = new Date(pull.pull_date);
-                      const now = new Date();
-                      return pullDate.getMonth() === now.getMonth() && 
-                             pullDate.getFullYear() === now.getFullYear();
-                    }).length}
-                  </span>
-                </div>
-                <div className="flex justify-between">
-                  <span className="text-lunar-glow opacity-70">Streak</span>
-                  <span className="text-astral-gold font-semibold">
-                    {todaysPull ? '🔥 Active' : '💤 Inactive'}
-                  </span>
-                </div>
-              </div>
-            </div>
-          </div>
         );
       case 'upgrade':
         return (
@@ -235,6 +194,8 @@ const DashboardWithDock: React.FC = () => {
             todaysPull={todaysPull}
             userDeckId={userProfile?.chosen_deck_id}
             onPullCreated={handlePullCreated}
+            onDeckChange={handleDeckChange}
+            recentPulls60Days={recentPulls60Days}
           />
         );
     }

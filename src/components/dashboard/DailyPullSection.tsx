@@ -11,15 +11,24 @@ import DigitalPullModal from '@/components/daily_pull/DigitalPullModal';
 import PhysicalCardSelector from '@/components/daily_pull/PhysicalCardSelector';
 import CardDisplay from '@/components/daily_pull/CardDisplay';
 import NoteEditor from '@/components/daily_pull/NoteEditor';
+import DeckToggle from '@/components/dashboard/DeckToggle';
 import { formatDate, getTodayDate } from '@/utils/helpers';
 
 interface DailyPullSectionProps {
   todaysPull: DailyPull | null;
   userDeckId?: number;
   onPullCreated?: () => void;
+  onDeckChange?: (deckId: number) => void;
+  recentPulls60Days?: any[];
 }
 
-const DailyPullSection: React.FC<DailyPullSectionProps> = ({ todaysPull, userDeckId, onPullCreated }) => {
+const DailyPullSection: React.FC<DailyPullSectionProps> = ({ 
+  todaysPull, 
+  userDeckId, 
+  onPullCreated,
+  onDeckChange,
+  recentPulls60Days = []
+}) => {
   const { userProfile } = useAuth();
   const { updatePullNotes, needsTodayPull } = useTarotPulls();
   
@@ -50,71 +59,117 @@ const DailyPullSection: React.FC<DailyPullSectionProps> = ({ todaysPull, userDec
     const { isNewDay, isFirstTime } = needsTodayPull();
     
     return (
-      <div className="card">
-        <div className="text-center">
-          <div className="w-20 h-20 mx-auto mb-6 bg-astral-gold bg-opacity-20 rounded-full flex items-center justify-center">
-            <Calendar className="w-10 h-10 text-astral-gold" />
-          </div>
-          
-          <h2 className="text-3xl font-cinzel font-bold text-lunar-glow mb-4">
-            {isNewDay ? 'New Day, New Insight' : 'Today\'s Reading'}
-          </h2>
-          
-          {isNewDay && (
-            <div className="mb-4">
-              <span className="inline-flex items-center px-3 py-1 rounded-full text-sm font-medium bg-emerald-whisper bg-opacity-20 text-emerald-whisper border border-emerald-whisper border-opacity-30">
-                <span className="w-2 h-2 bg-emerald-whisper rounded-full mr-2 animate-pulse"></span>
-                New Day
-              </span>
+      <div className="grid lg:grid-cols-3 gap-8">
+        {/* Main Content - Left Column */}
+        <div className="lg:col-span-2">
+          <div className="card">
+            <div className="text-center">
+              <div className="w-20 h-20 mx-auto mb-6 bg-astral-gold bg-opacity-20 rounded-full flex items-center justify-center">
+                <Calendar className="w-10 h-10 text-astral-gold" />
+              </div>
+              
+              <h2 className="text-3xl font-cinzel font-bold text-lunar-glow mb-4">
+                {isNewDay ? 'New Day, New Insight' : 'Today\'s Reading'}
+              </h2>
+              
+              {isNewDay && (
+                <div className="mb-4">
+                  <span className="inline-flex items-center px-3 py-1 rounded-full text-sm font-medium bg-emerald-whisper bg-opacity-20 text-emerald-whisper border border-emerald-whisper border-opacity-30">
+                    <span className="w-2 h-2 bg-emerald-whisper rounded-full mr-2 animate-pulse"></span>
+                    New Day
+                  </span>
+                </div>
+              )}
+              
+              <p className="text-lunar-glow opacity-70 mb-8 text-lg">
+                {formatDate(getTodayDate())}
+              </p>
+              
+              <p className="text-lunar-glow opacity-80 mb-8 max-w-md mx-auto">
+                {isNewDay 
+                  ? 'A new day has dawned. Draw a fresh card to guide your journey ahead.'
+                  : 'Begin your day with insight. Choose how you\'d like to draw your card for today.'
+                }
+              </p>
+              
+              {isNewDay && (
+                <p className="text-astral-gold text-sm mb-6 opacity-80">
+                  💫 Each day brings new energies and insights. Your daily card awaits!
+                </p>
+              )}
+
+              <div className="flex flex-col sm:flex-row gap-4 justify-center">
+                <Button
+                  variant="primary"
+                  size="lg"
+                  onClick={() => setShowDigitalPull(true)}
+                  className="flex items-center space-x-2"
+                  disabled={!userDeckId}
+                >
+                  <Shuffle className="w-5 h-5" />
+                  <span>Digital Pull</span>
+                </Button>
+                
+                <Button
+                  variant="secondary"
+                  size="lg"
+                  onClick={() => setShowPhysicalPull(true)}
+                  className="flex items-center space-x-2"
+                  disabled={!userDeckId}
+                >
+                  <Hand className="w-5 h-5" />
+                  <span>Physical Pull</span>
+                </Button>
+              </div>
+
+              {!userDeckId && (
+                <p className="text-amber-glow text-sm mt-4">
+                  Please select a deck in your settings to begin pulling cards.
+                </p>
+              )}
             </div>
-          )}
-          
-          <p className="text-lunar-glow opacity-70 mb-8 text-lg">
-            {formatDate(getTodayDate())}
-          </p>
-          
-          <p className="text-lunar-glow opacity-80 mb-8 max-w-md mx-auto">
-            {isNewDay 
-              ? 'A new day has dawned. Draw a fresh card to guide your journey ahead.'
-              : 'Begin your day with insight. Choose how you\'d like to draw your card for today.'
-            }
-          </p>
-          
-          {isNewDay && (
-            <p className="text-astral-gold text-sm mb-6 opacity-80">
-              💫 Each day brings new energies and insights. Your daily card awaits!
-            </p>
-          )}
-
-          <div className="flex flex-col sm:flex-row gap-4 justify-center">
-            <Button
-              variant="primary"
-              size="lg"
-              onClick={() => setShowDigitalPull(true)}
-              className="flex items-center space-x-2"
-              disabled={!userDeckId}
-            >
-              <Shuffle className="w-5 h-5" />
-              <span>Digital Pull</span>
-            </Button>
-            
-            <Button
-              variant="secondary"
-              size="lg"
-              onClick={() => setShowPhysicalPull(true)}
-              className="flex items-center space-x-2"
-              disabled={!userDeckId}
-            >
-              <Hand className="w-5 h-5" />
-              <span>Physical Pull</span>
-            </Button>
           </div>
+        </div>
 
-          {!userDeckId && (
-            <p className="text-amber-glow text-sm mt-4">
-              Please select a deck in your settings to begin pulling cards.
-            </p>
-          )}
+        {/* Right Sidebar */}
+        <div className="space-y-6">
+          {/* Deck Toggle */}
+          <div className="relative z-20">
+            <DeckToggle
+              currentDeckId={userDeckId}
+              onDeckChange={onDeckChange}
+            />
+          </div>
+          
+          {/* Quick Stats */}
+          <div className="card relative z-10">
+            <h3 className="text-xl font-cinzel font-semibold text-lunar-glow mb-4">
+              Quick Stats
+            </h3>
+            <div className="space-y-3">
+              <div className="flex justify-between">
+                <span className="text-lunar-glow opacity-70">Total Pulls (60 days)</span>
+                <span className="text-astral-gold font-semibold">{recentPulls60Days.length}</span>
+              </div>
+              <div className="flex justify-between">
+                <span className="text-lunar-glow opacity-70">This Month</span>
+                <span className="text-astral-gold font-semibold">
+                  {recentPulls60Days.filter(pull => {
+                    const pullDate = new Date(pull.pull_date);
+                    const now = new Date();
+                    return pullDate.getMonth() === now.getMonth() && 
+                           pullDate.getFullYear() === now.getFullYear();
+                  }).length}
+                </span>
+              </div>
+              <div className="flex justify-between">
+                <span className="text-lunar-glow opacity-70">Streak</span>
+                <span className="text-astral-gold font-semibold">
+                  {todaysPull ? '🔥 Active' : '💤 Inactive'}
+                </span>
+              </div>
+            </div>
+          </div>
         </div>
 
         {/* Digital Pull Modal */}
@@ -136,49 +191,93 @@ const DailyPullSection: React.FC<DailyPullSectionProps> = ({ todaysPull, userDec
     );
   }  // If user has pulled today, show the card and options
   return (
-    <div className="space-y-6">
-      {/* Today's Card Display */}
-      <div className="card">
-        <div className="text-center mb-6">
-          <h2 className="text-3xl font-cinzel font-bold text-lunar-glow mb-2">
-            Today's Card
-          </h2>
-          <p className="text-lunar-glow opacity-70 text-lg">
-            {formatDate(todaysPull.pull_date)}
-          </p>
-        </div>
-
-        <CardDisplay
-          pull={todaysPull}
-          showMeanings={false}
-          className="mb-6"
-        />
-
-        <div className="text-center">
-          <Button
-            variant="ghost"
-            onClick={() => setShowNoteEditor(true)}
-            className="flex items-center space-x-2 mx-auto"
-          >
-            <Edit3 className="w-4 h-4" />
-            <span>{todaysPull.notes ? 'Edit Notes' : 'Add Notes'}</span>
-          </Button>
-        </div>
-      </div>
-
-      {/* Notes Section */}
-      {todaysPull.notes && (
+    <div className="grid lg:grid-cols-3 gap-8">
+      {/* Main Content - Left Column */}
+      <div className="lg:col-span-2 space-y-6">
+        {/* Today's Card Display */}
         <div className="card">
-          <h3 className="text-xl font-cinzel font-semibold text-lunar-glow mb-4">
-            Your Notes
-          </h3>
-          <div className="bg-midnight-aura rounded-lg p-4">
-            <p className="text-lunar-glow whitespace-pre-wrap leading-relaxed">
-              {todaysPull.notes}
+          <div className="text-center mb-6">
+            <h2 className="text-3xl font-cinzel font-bold text-lunar-glow mb-2">
+              Today's Card
+            </h2>
+            <p className="text-lunar-glow opacity-70 text-lg">
+              {formatDate(todaysPull.pull_date)}
             </p>
           </div>
+
+          <CardDisplay
+            pull={todaysPull}
+            showMeanings={false}
+            className="mb-6"
+          />
+
+          <div className="text-center">
+            <Button
+              variant="ghost"
+              onClick={() => setShowNoteEditor(true)}
+              className="flex items-center space-x-2 mx-auto"
+            >
+              <Edit3 className="w-4 h-4" />
+              <span>{todaysPull.notes ? 'Edit Notes' : 'Add Notes'}</span>
+            </Button>
+          </div>
         </div>
-      )}
+
+        {/* Notes Section */}
+        {todaysPull.notes && (
+          <div className="card">
+            <h3 className="text-xl font-cinzel font-semibold text-lunar-glow mb-4">
+              Your Notes
+            </h3>
+            <div className="bg-midnight-aura rounded-lg p-4">
+              <p className="text-lunar-glow whitespace-pre-wrap leading-relaxed">
+                {todaysPull.notes}
+              </p>
+            </div>
+          </div>
+        )}
+      </div>
+
+      {/* Right Sidebar */}
+      <div className="space-y-6">
+        {/* Deck Toggle */}
+        <div className="relative z-20">
+          <DeckToggle
+            currentDeckId={userDeckId}
+            onDeckChange={onDeckChange}
+          />
+        </div>
+        
+        {/* Quick Stats */}
+        <div className="card relative z-10">
+          <h3 className="text-xl font-cinzel font-semibold text-lunar-glow mb-4">
+            Quick Stats
+          </h3>
+          <div className="space-y-3">
+            <div className="flex justify-between">
+              <span className="text-lunar-glow opacity-70">Total Pulls (60 days)</span>
+              <span className="text-astral-gold font-semibold">{recentPulls60Days.length}</span>
+            </div>
+            <div className="flex justify-between">
+              <span className="text-lunar-glow opacity-70">This Month</span>
+              <span className="text-astral-gold font-semibold">
+                {recentPulls60Days.filter(pull => {
+                  const pullDate = new Date(pull.pull_date);
+                  const now = new Date();
+                  return pullDate.getMonth() === now.getMonth() && 
+                         pullDate.getFullYear() === now.getFullYear();
+                }).length}
+              </span>
+            </div>
+            <div className="flex justify-between">
+              <span className="text-lunar-glow opacity-70">Streak</span>
+              <span className="text-astral-gold font-semibold">
+                {todaysPull ? '🔥 Active' : '💤 Inactive'}
+              </span>
+            </div>
+          </div>
+        </div>
+      </div>
 
       {/* Note Editor Modal */}
       <Modal
