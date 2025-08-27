@@ -15,9 +15,10 @@ interface DigitalPullModalProps {
   isOpen: boolean;
   onClose: () => void;
   deckId?: number;
+  onPullCreated: () => void;
 }
 
-const DigitalPullModal: React.FC<DigitalPullModalProps> = ({ isOpen, onClose, deckId }) => {
+const DigitalPullModal: React.FC<DigitalPullModalProps> = ({ isOpen, onClose, deckId, onPullCreated }) => {
   const { createPull } = useTarotPulls();
   
   const [cards, setCards] = useState<TarotCard[]>([]);
@@ -84,6 +85,7 @@ const DigitalPullModal: React.FC<DigitalPullModalProps> = ({ isOpen, onClose, de
       await createPull(selectedCard.id, 'digital', notes);
       onClose();
       resetModal();
+      onPullCreated();
     } catch (err) {
       setError(err instanceof Error ? err.message : 'Failed to save your pull');
     } finally {

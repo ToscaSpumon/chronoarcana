@@ -17,7 +17,7 @@ import { userAPI } from '@/lib/api';
 
 const Dashboard: React.FC = () => {
   const { userProfile } = useAuth();
-  const { todaysPull, recentPulls, loading, error, needsTodayPull } = useTarotPulls();
+  const { todaysPull, recentPulls, loading, error, needsTodayPull, refresh } = useTarotPulls();
   const [showDeckSelector, setShowDeckSelector] = useState(false);
 
   // Check if user needs to select a deck
@@ -47,6 +47,11 @@ const Dashboard: React.FC = () => {
       console.error('Failed to update deck:', err);
       // Could add a toast notification here
     }
+  };
+
+  // Handle when a new pull is created
+  const handlePullCreated = async () => {
+    await refresh(); // Refresh the data to show the new pull immediately
   };
 
   if (loading) {
@@ -125,6 +130,7 @@ const Dashboard: React.FC = () => {
             <DailyPullSection 
               todaysPull={todaysPull}
               userDeckId={userProfile?.chosen_deck_id}
+              onPullCreated={handlePullCreated}
             />
             
             {/* Recent Pulls */}

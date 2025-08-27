@@ -14,9 +14,10 @@ interface PhysicalCardSelectorProps {
   isOpen: boolean;
   onClose: () => void;
   deckId?: number;
+  onPullCreated: () => void;
 }
 
-const PhysicalCardSelector: React.FC<PhysicalCardSelectorProps> = ({ isOpen, onClose, deckId }) => {
+const PhysicalCardSelector: React.FC<PhysicalCardSelectorProps> = ({ isOpen, onClose, deckId, onPullCreated }) => {
   const { createPull } = useTarotPulls();
   
   const [cards, setCards] = useState<TarotCard[]>([]);
@@ -56,17 +57,9 @@ const PhysicalCardSelector: React.FC<PhysicalCardSelectorProps> = ({ isOpen, onC
     }
     
     if (searchTerm && searchTerm.trim() !== '') {
-      console.log(`Searching for: "${searchTerm}"`);
-      console.log(`Initial filtered cards before search:`, filtered.length);
+
       
       const searchLower = searchTerm.toLowerCase();
-      console.log(`Search term (lowercase): "${searchLower}"`);
-      
-      const originalFiltered = [...filtered]; // Create a copy for debugging
-      console.log(`Original filtered array:`, originalFiltered.map(c => c.card_name));
-      
-      const beforeFilter = [...filtered];
-      console.log(`Before filter - cards:`, beforeFilter.map(c => c.card_name));
       
       const filteredResults = filtered.filter(card => {
         const cardNameLower = card.card_name.toLowerCase();
@@ -80,60 +73,19 @@ const PhysicalCardSelector: React.FC<PhysicalCardSelectorProps> = ({ isOpen, onC
         
         const shouldInclude = matchesName || matchesSuit;
         
-        // Special debugging for the problematic cards
-        if (card.card_name === 'The Fool' || card.card_name === 'Five of Wands' || 
-            card.card_name === 'Nine of Wands' || card.card_name === 'Nine of Cups') {
-          console.log(`🔍 DEBUGGING PROBLEMATIC CARD "${card.card_name}":`);
-          console.log(`  - cardName: "${card.card_name}"`);
-          console.log(`  - cardNameLower: "${cardNameLower}"`);
-          console.log(`  - suit: "${card.suit}"`);
-          console.log(`  - suitLower: "${suitLower}"`);
-          console.log(`  - keywords: "${card.keywords}"`);
-          console.log(`  - keywordsLower: "${keywordsLower}"`);
-          console.log(`  - searchLower: "${searchLower}"`);
-          console.log(`  - searchLowerLength: ${searchLower.length}`);
-          console.log(`  - searchLowerCharCodes: [${Array.from(searchLower).map(c => c.charCodeAt(0)).join(', ')}]`);
-          console.log(`  - matchesName: ${matchesName}`);
-          console.log(`  - matchesSuit: ${matchesSuit}`);
-          // console.log(`  - matchesKeywords: ${matchesKeywords}`); // Removed keywords search
-          console.log(`  - shouldInclude: ${shouldInclude}`);
-          console.log(`  - nameContains: ${cardNameLower.includes(searchLower)}`);
-          console.log(`  - suitContains: ${suitLower.includes(searchLower)}`);
-          // console.log(`  - keywordsContains: ${keywordsLower.includes(searchLower)}`); // Removed keywords search
-          
-          // Additional debugging for keywords
-          console.log(`  - keywords length: ${card.keywords?.length || 0}`);
-          console.log(`  - keywordsLower length: ${keywordsLower.length}`);
-          console.log(`  - keywords char codes: [${Array.from(keywordsLower).map(c => c.charCodeAt(0)).join(', ')}]`);
-          console.log(`  - keywords contains "ten": ${keywordsLower.includes('ten')}`);
-          console.log(`  - keywords contains searchLower: ${keywordsLower.includes(searchLower)}`);
-          console.log(`  - keywords indexOf "ten": ${keywordsLower.indexOf('ten')}`);
-          console.log(`  - keywords indexOf searchLower: ${keywordsLower.indexOf(searchLower)}`);
-        }
+
         
-        if (shouldInclude) {
-          console.log(`✅ INCLUDING "${card.card_name}"`);
-        } else {
-          console.log(`❌ EXCLUDING "${card.card_name}"`);
-        }
+
         
         return shouldInclude;
       });
       
-      console.log(`Filter function returned:`, filteredResults.map(c => c.card_name));
-      console.log(`Filter function length:`, filteredResults.length);
-      
-      // Assign the filtered results to our variable
       filtered = filteredResults;
-      
-      console.log(`After assignment - filtered:`, filtered.map(c => c.card_name));
-      console.log(`After assignment - length:`, filtered.length);
     } else if (!selectedCategory) {
       // If no search term and no category selected, show no cards
       filtered = [];
     }
     
-    console.log(`Final state before setFilteredCards:`, filtered.map(c => c.card_name));
     setFilteredCards(filtered);
   }, [cards, searchTerm, selectedCategory]);
 
@@ -160,6 +112,7 @@ const PhysicalCardSelector: React.FC<PhysicalCardSelectorProps> = ({ isOpen, onC
       await createPull(selectedCard.id, 'physical', notes);
       onClose();
       resetModal();
+      onPullCreated();
     } catch (err) {
       setError(err instanceof Error ? err.message : 'Failed to save your pull');
     } finally {
@@ -236,9 +189,7 @@ const PhysicalCardSelector: React.FC<PhysicalCardSelectorProps> = ({ isOpen, onC
                 className="w-full bg-[var(--shadow-veil)] border border-[var(--midnight-aura)] text-[var(--lunar-glow)] rounded-lg transition-all duration-300 focus:border-[var(--astral-gold)] focus:outline-none focus:ring-0 focus:ring-[var(--astral-gold)] focus:ring-opacity-10 py-3 pl-12 pr-4 placeholder-[#C0C0C8]"
                 style={{ paddingLeft: '3rem' }}
               />
-              <div className="mt-2 text-xs text-lunar-glow opacity-70">
-                Debug: Search: "{searchTerm}" | Cards: {cards.length} | Filtered: {filteredCards.length} | Category: {selectedCategory || 'None'}
-              </div>
+
             </div>
 
             {/* Category Dropdown */}
@@ -299,7 +250,6 @@ const PhysicalCardSelector: React.FC<PhysicalCardSelectorProps> = ({ isOpen, onC
                       <div
                         key={card.id}
                         onClick={() => {
-                          console.log('Card clicked:', card.card_name);
                           handleCardSelect(card);
                         }}
                         className="p-3 rounded-lg border border-midnight-aura hover:border-astral-gold hover:bg-midnight-aura cursor-pointer transition-all duration-150"
@@ -324,8 +274,6 @@ const PhysicalCardSelector: React.FC<PhysicalCardSelectorProps> = ({ isOpen, onC
                     <button
                       type="button"
                       onClick={() => {
-                        console.log('Card dropdown clicked, current state:', isCardDropdownOpen);
-                        console.log('Filtered cards available:', filteredCards.length);
                         setIsCardDropdownOpen(!isCardDropdownOpen);
                       }}
                       className="w-full input flex items-center justify-between cursor-pointer"
@@ -347,13 +295,12 @@ const PhysicalCardSelector: React.FC<PhysicalCardSelectorProps> = ({ isOpen, onC
                         <div className="px-4 py-2 text-xs text-lunar-glow opacity-50 border-b border-midnight-aura">
                           Showing {filteredCards.length} filtered cards
                         </div>
-                        {console.log('Rendering dropdown with filtered cards:', filteredCards.map(c => c.card_name))}
+
                         {filteredCards.length > 0 ? (
                           filteredCards.map((card) => (
                             <div
                               key={card.id}
                               onClick={() => {
-                                console.log('Card clicked:', card.card_name);
                                 handleCardSelect(card);
                               }}
                               className="px-4 py-3 hover:bg-midnight-aura cursor-pointer border-b border-midnight-aura last:border-b-0 transition-colors duration-150"

@@ -16,9 +16,10 @@ import { formatDate, getTodayDate } from '@/utils/helpers';
 interface DailyPullSectionProps {
   todaysPull: DailyPull | null;
   userDeckId?: number;
+  onPullCreated?: () => void;
 }
 
-const DailyPullSection: React.FC<DailyPullSectionProps> = ({ todaysPull, userDeckId }) => {
+const DailyPullSection: React.FC<DailyPullSectionProps> = ({ todaysPull, userDeckId, onPullCreated }) => {
   const { userProfile } = useAuth();
   const { updatePullNotes, needsTodayPull } = useTarotPulls();
   
@@ -37,6 +38,11 @@ const DailyPullSection: React.FC<DailyPullSectionProps> = ({ todaysPull, userDec
     } catch (error) {
       console.error('Failed to save notes:', error);
     }
+  };
+
+  // Callback to notify parent when pull is created
+  const handlePullCreated = () => {
+    onPullCreated?.();
   };
 
   // If user hasn't pulled today, show pull options
@@ -116,6 +122,7 @@ const DailyPullSection: React.FC<DailyPullSectionProps> = ({ todaysPull, userDec
           isOpen={showDigitalPull}
           onClose={() => setShowDigitalPull(false)}
           deckId={userDeckId}
+          onPullCreated={handlePullCreated}
         />
 
         {/* Physical Pull Modal */}
@@ -123,6 +130,7 @@ const DailyPullSection: React.FC<DailyPullSectionProps> = ({ todaysPull, userDec
           isOpen={showPhysicalPull}
           onClose={() => setShowPhysicalPull(false)}
           deckId={userDeckId}
+          onPullCreated={handlePullCreated}
         />
       </div>
     );
