@@ -17,7 +17,7 @@ import { userAPI } from '@/lib/api';
 
 const Dashboard: React.FC = () => {
   const { userProfile } = useAuth();
-  const { todaysPull, recentPulls, loading, error, needsTodayPull, refresh } = useTarotPulls();
+  const { todaysPull, recentPulls, recentPulls60Days, loading, error, needsTodayPull, refresh } = useTarotPulls();
   const [showDeckSelector, setShowDeckSelector] = useState(false);
 
   // Check if user needs to select a deck
@@ -32,8 +32,8 @@ const Dashboard: React.FC = () => {
     ? getDaysUntilRetention(userProfile.created_at, APP_CONFIG.FREE_TRIAL_DAYS)
     : null;
 
-  // Get most pulled card info
-  const mostPulledCard = getMostPulledCard(recentPulls);
+  // Get most pulled card info (based on 60 days for analytics)
+  const mostPulledCard = getMostPulledCard(recentPulls60Days);
 
   // Handle deck change
   const handleDeckChange = async (deckId: number) => {
@@ -136,11 +136,12 @@ const Dashboard: React.FC = () => {
             {/* Recent Pulls */}
             <RecentPullsList 
               pulls={recentPulls}
+              pulls60Days={recentPulls60Days}
               isFreeTier={userProfile?.subscription_status === 'free'}
             />
             
             {/* Data Visualization */}
-            <DataVisualization pulls={recentPulls} />
+            <DataVisualization pulls={recentPulls60Days} />
           </div>
 
           {/* Right Column - Sidebar */}
@@ -160,13 +161,13 @@ const Dashboard: React.FC = () => {
               </h3>
               <div className="space-y-3">
                 <div className="flex justify-between">
-                  <span className="text-lunar-glow opacity-70">Total Pulls</span>
-                  <span className="text-astral-gold font-semibold">{recentPulls.length}</span>
+                  <span className="text-lunar-glow opacity-70">Total Pulls (60 days)</span>
+                  <span className="text-astral-gold font-semibold">{recentPulls60Days.length}</span>
                 </div>
                 <div className="flex justify-between">
                   <span className="text-lunar-glow opacity-70">This Month</span>
                   <span className="text-astral-gold font-semibold">
-                    {recentPulls.filter(pull => {
+                    {recentPulls60Days.filter(pull => {
                       const pullDate = new Date(pull.pull_date);
                       const now = new Date();
                       return pullDate.getMonth() === now.getMonth() && 

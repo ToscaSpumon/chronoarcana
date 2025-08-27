@@ -7,12 +7,16 @@ import Button from '@/components/common/Button';
 import { formatDate, formatDateShort } from '@/utils/helpers';
 
 interface RecentPullsListProps {
-  pulls: DailyPull[];
+  pulls: DailyPull[]; // Last 7 days for display
+  pulls60Days: DailyPull[]; // Last 60 days for export
   isFreeTier: boolean;
 }
 
 const RecentPullsList: React.FC<RecentPullsListProps> = ({ pulls, isFreeTier }) => {
   const [isExporting, setIsExporting] = useState(false);
+
+    // This component now shows only the last 7 days of pulls
+  // For historical data beyond 7 days, users will use the calendar section
 
   const handleViewPull = (pullId: string) => {
     // Navigate to pull detail view (future implementation)
@@ -20,7 +24,7 @@ const RecentPullsList: React.FC<RecentPullsListProps> = ({ pulls, isFreeTier }) 
   };
 
   const handleExportData = async () => {
-    if (pulls.length === 0) {
+    if (pulls60Days.length === 0) {
       alert('No data to export');
       return;
     }
@@ -28,7 +32,7 @@ const RecentPullsList: React.FC<RecentPullsListProps> = ({ pulls, isFreeTier }) 
     setIsExporting(true);
 
     try {
-      // Create CSV content
+      // Create CSV content - export all 60 days of data for comprehensive analysis
       const headers = [
         'Date',
         'Card Name',
@@ -42,7 +46,7 @@ const RecentPullsList: React.FC<RecentPullsListProps> = ({ pulls, isFreeTier }) 
 
       const csvRows = [
         headers.join(','),
-        ...pulls.map(pull => [
+        ...pulls60Days.map(pull => [
           pull.pull_date,
           pull.card?.card_name || 'Unknown',
           pull.card?.card_number || '',
@@ -63,7 +67,7 @@ const RecentPullsList: React.FC<RecentPullsListProps> = ({ pulls, isFreeTier }) 
       if (link.download !== undefined) {
         const url = URL.createObjectURL(blob);
         link.setAttribute('href', url);
-        link.setAttribute('download', `tarot-pulls-${new Date().toISOString().split('T')[0]}.csv`);
+        link.setAttribute('download', `tarot-pulls-60-days-${new Date().toISOString().split('T')[0]}.csv`);
         link.style.visibility = 'hidden';
         document.body.appendChild(link);
         link.click();
@@ -106,7 +110,7 @@ const RecentPullsList: React.FC<RecentPullsListProps> = ({ pulls, isFreeTier }) 
         <div className="flex items-center space-x-3">
           {isFreeTier && (
             <span className="text-xs text-amber-glow bg-amber-glow bg-opacity-20 px-2 py-1 rounded-full">
-              Last 60 days
+              Last 7 days
             </span>
           )}
           <Button
@@ -179,7 +183,7 @@ const RecentPullsList: React.FC<RecentPullsListProps> = ({ pulls, isFreeTier }) 
       {pulls.length > 10 && (
         <div className="mt-6 text-center">
           <Button variant="ghost" size="sm">
-            View All Pulls ({pulls.length})
+            View Calendar for More History
           </Button>
         </div>
       )}

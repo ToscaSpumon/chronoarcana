@@ -155,7 +155,13 @@ const DataVisualization: React.FC<DataVisualizationProps> = ({ pulls }) => {
 
       {/* Summary Stats */}
       {summaryStats && (
-        <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mb-6">
+        <>
+          <div className="mb-4 text-center">
+            <p className="text-sm text-lunar-glow opacity-70">
+              📊 Analytics based on your last 60 days of pulls
+            </p>
+          </div>
+          <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mb-6">
           <div className="bg-midnight-aura rounded-lg p-4 text-center">
             <div className="text-2xl font-bold text-astral-gold">
               {summaryStats.totalPulls}
@@ -184,6 +190,7 @@ const DataVisualization: React.FC<DataVisualizationProps> = ({ pulls }) => {
             <div className="text-sm text-lunar-glow opacity-70">Avg per Card</div>
           </div>
         </div>
+        </>
       )}
 
       {/* Chart */}

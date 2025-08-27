@@ -37,6 +37,10 @@ const ProfileBadge: React.FC<ProfileBadgeProps> = ({ mostPulledCard, totalPulls 
         Your Signature Card
       </h3>
       
+      <p className="text-xs text-lunar-glow opacity-60 mb-2">
+        Based on last 60 days
+      </p>
+      
       {/* Card representation placeholder */}
       <div className="w-16 h-20 mx-auto mb-3 bg-gradient-to-br from-astral-gold to-amethyst-dream rounded-lg flex items-center justify-center">
         <Sparkles className="w-6 h-6 text-lunar-glow" />

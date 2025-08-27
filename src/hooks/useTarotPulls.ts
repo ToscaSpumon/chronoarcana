@@ -7,7 +7,8 @@ import { getTodayDate } from '@/utils/helpers';
 export const useTarotPulls = () => {
   const { user } = useAuth();
   const [todaysPull, setTodaysPull] = useState<DailyPull | null>(null);
-  const [recentPulls, setRecentPulls] = useState<DailyPull[]>([]);
+  const [recentPulls, setRecentPulls] = useState<DailyPull[]>([]); // Last 7 days for display
+  const [recentPulls60Days, setRecentPulls60Days] = useState<DailyPull[]>([]); // Last 60 days for analytics
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
 
@@ -44,10 +45,23 @@ export const useTarotPulls = () => {
     if (!user) return;
     
     try {
-      const pulls = await pullAPI.getRecentPulls(user.id);
+      // Fetch only pulls from the last 7 days for the Recent Pulls section
+      const pulls = await pullAPI.getRecentPullsLast7Days(user.id);
       setRecentPulls(pulls);
     } catch (err) {
       setError(err instanceof Error ? err.message : 'Failed to fetch recent pulls');
+    }
+  };
+
+  const fetchRecentPulls60Days = async () => {
+    if (!user) return;
+    
+    try {
+      // Fetch pulls from the last 60 days for analytics and export
+      const pulls = await pullAPI.getRecentPullsLast60Days(user.id);
+      setRecentPulls60Days(pulls);
+    } catch (err) {
+      setError(err instanceof Error ? err.message : 'Failed to fetch 60-day pulls');
     }
   };
 
@@ -114,7 +128,7 @@ export const useTarotPulls = () => {
   const refresh = async () => {
     if (!user) return;
     setLoading(true);
-    await Promise.all([fetchTodaysPull(), fetchRecentPulls()]);
+    await Promise.all([fetchTodaysPull(), fetchRecentPulls(), fetchRecentPulls60Days()]);
     setLoading(false);
   };
 
@@ -134,11 +148,12 @@ export const useTarotPulls = () => {
   useEffect(() => {
     if (user) {
       setLoading(true);
-      Promise.all([fetchTodaysPull(), fetchRecentPulls()])
+      Promise.all([fetchTodaysPull(), fetchRecentPulls(), fetchRecentPulls60Days()])
         .finally(() => setLoading(false));
     } else {
       setTodaysPull(null);
       setRecentPulls([]);
+      setRecentPulls60Days([]);
       setLoading(false);
     }
   }, [user]);
@@ -170,6 +185,7 @@ export const useTarotPulls = () => {
   return {
     todaysPull,
     recentPulls,
+    recentPulls60Days, // Last 60 days for analytics and export
     loading,
     error,
     createPull,

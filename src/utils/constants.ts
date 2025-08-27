@@ -2,7 +2,8 @@
 export const APP_CONFIG = {
   FREE_TRIAL_DAYS: 60,
   PREMIUM_PRICE: 8, // $8/month
-  RECENT_PULLS_LIMIT: 30,
+  RECENT_PULLS_DISPLAY_LIMIT: 7, // Last 7 days for display
+  RECENT_PULLS_ANALYTICS_LIMIT: 60, // Last 60 days for analytics and export
 } as const;
 
 // Tarot deck names

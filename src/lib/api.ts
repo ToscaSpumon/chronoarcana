@@ -416,6 +416,96 @@ export const pullAPI = {
     return pullsWithCards;
   },
 
+  // Get pulls from the last 7 days
+  getRecentPullsLast7Days: async (userId: string): Promise<DailyPull[]> => {
+    // Calculate date 7 days ago
+    const sevenDaysAgo = new Date();
+    sevenDaysAgo.setDate(sevenDaysAgo.getDate() - 7);
+    const sevenDaysAgoStr = sevenDaysAgo.toISOString().split('T')[0];
+    
+    const { data, error } = await supabase
+      .from('daily_pulls')
+      .select(`
+        id,
+        user_id,
+        card_id,
+        pull_date,
+        pull_type,
+        notes,
+        is_reversed,
+        created_at,
+        updated_at
+      `)
+      .eq('user_id', userId)
+      .gte('pull_date', sevenDaysAgoStr)
+      .order('pull_date', { ascending: false });
+    
+    if (error) throw error;
+    
+    // Fetch card data separately to avoid column ambiguity
+    const pullsWithCards = await Promise.all(
+      (data || []).map(async (pull) => {
+        const { data: cardData } = await supabase
+          .from('tarot_cards')
+          .select('*')
+          .eq('id', pull.card_id)
+          .single();
+        
+        return {
+          ...pull,
+          card: cardData
+        };
+      })
+    );
+    
+    return pullsWithCards;
+  },
+
+  // Get pulls from the last 60 days (for analytics and export)
+  getRecentPullsLast60Days: async (userId: string): Promise<DailyPull[]> => {
+    // Calculate date 60 days ago
+    const sixtyDaysAgo = new Date();
+    sixtyDaysAgo.setDate(sixtyDaysAgo.getDate() - 60);
+    const sixtyDaysAgoStr = sixtyDaysAgo.toISOString().split('T')[0];
+    
+    const { data, error } = await supabase
+      .from('daily_pulls')
+      .select(`
+        id,
+        user_id,
+        card_id,
+        pull_date,
+        pull_type,
+        notes,
+        is_reversed,
+        created_at,
+        updated_at
+      `)
+      .eq('user_id', userId)
+      .gte('pull_date', sixtyDaysAgoStr)
+      .order('pull_date', { ascending: false });
+    
+    if (error) throw error;
+    
+    // Fetch card data separately to avoid column ambiguity
+    const pullsWithCards = await Promise.all(
+      (data || []).map(async (pull) => {
+        const { data: cardData } = await supabase
+          .from('tarot_cards')
+          .select('*')
+          .eq('id', pull.card_id)
+          .single();
+        
+        return {
+          ...pull,
+          card: cardData
+        };
+      })
+    );
+    
+    return pullsWithCards;
+  },
+
   // Get notes for a specific pull
   getPullNotes: async (pullId: string): Promise<{ notes: string | null; updated_at: string }> => {
     if (!pullId) {
