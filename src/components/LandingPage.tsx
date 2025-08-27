@@ -1,11 +1,12 @@
 'use client';
 
 import React, { useState } from 'react';
-import { Moon, Stars, Eye, TrendingUp, Shield } from 'lucide-react';
+import { Eye, TrendingUp, Shield } from 'lucide-react';
 import Button from '@/components/common/Button';
 import Modal from '@/components/common/Modal';
 import AuthForms from '@/components/auth/AuthForms';
 import { APP_CONFIG } from '@/utils/constants';
+import LightRays from '@/components/background/LightRays';
 
 const LandingPage: React.FC = () => {
   const [showAuthModal, setShowAuthModal] = useState(false);
@@ -17,9 +18,57 @@ const LandingPage: React.FC = () => {
   };
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-deep-void via-shadow-veil to-deep-void">
+    <div className="min-h-screen relative">
+      {/* LightRays Background Effects */}
+      <div className="fixed inset-0 z-0 bg-gradient-to-br from-deep-void via-deep-void to-deep-void">
+        <LightRays 
+          raysOrigin="top-center"
+          raysColor="#fbbf24"
+          raysSpeed={0.6}
+          lightSpread={1.3}
+          rayLength={2.2}
+          pulsating={true}
+          fadeDistance={1.1}
+          saturation={1.1}
+          followMouse={true}
+          mouseInfluence={0.12}
+          noiseAmount={0.08}
+          distortion={0.03}
+        />
+        
+        <LightRays 
+          raysOrigin="left"
+          raysColor="#a855f7"
+          raysSpeed={0.45}
+          lightSpread={0.9}
+          rayLength={1.8}
+          pulsating={false}
+          fadeDistance={0.9}
+          saturation={0.95}
+          followMouse={false}
+          mouseInfluence={0}
+          noiseAmount={0.05}
+          distortion={0.02}
+        />
+        
+        <LightRays 
+          raysOrigin="bottom-right"
+          raysColor="#10b981"
+          raysSpeed={0.55}
+          lightSpread={1.1}
+          rayLength={1.6}
+          pulsating={true}
+          fadeDistance={1.0}
+          saturation={1.05}
+          followMouse={true}
+          mouseInfluence={0.08}
+          noiseAmount={0.06}
+          distortion={0.04}
+        />
+      </div>
+
       {/* Navigation */}
-      <nav className="border-b border-midnight-aura">
+      <nav className="border-b border-midnight-aura border-opacity-30">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="flex justify-between items-center h-16">
             <h1 className="text-2xl font-cinzel font-bold text-astral-gold">
@@ -45,15 +94,8 @@ const LandingPage: React.FC = () => {
       </nav>
 
       {/* Hero Section */}
-      <section className="relative py-20 px-4 sm:px-6 lg:px-8">
+      <section className="relative py-16 px-4 sm:px-6 lg:px-8">
         <div className="max-w-4xl mx-auto text-center">
-          {/* Decorative elements */}
-          <div className="absolute top-10 left-10 text-astral-gold opacity-20">
-            <Moon className="w-16 h-16 animate-pulse" />
-          </div>
-          <div className="absolute bottom-10 right-10 text-amethyst-dream opacity-20">
-            <Stars className="w-20 h-20 animate-pulse" />
-          </div>
           
           <h1 className="text-5xl md:text-7xl font-cinzel font-bold text-lunar-glow mb-8 leading-tight">
             Unveil Your
@@ -84,7 +126,7 @@ const LandingPage: React.FC = () => {
           </div>
         </div>
       </section>      {/* Features Section */}
-      <section className="py-20 px-4 sm:px-6 lg:px-8 bg-shadow-veil bg-opacity-30">
+      <section className="py-16 px-4 sm:px-6 lg:px-8">
         <div className="max-w-6xl mx-auto">
           <h2 className="text-4xl md:text-5xl font-cinzel font-bold text-center text-lunar-glow mb-16">
             Your Mystical Companion
@@ -93,7 +135,7 @@ const LandingPage: React.FC = () => {
           <div className="grid md:grid-cols-3 gap-8">
             {/* Feature 1 */}
             <div className="text-center p-8 card">
-              <div className="w-16 h-16 mx-auto mb-6 bg-astral-gold bg-opacity-20 rounded-full flex items-center justify-center">
+              <div className="w-16 h-16 mx-auto mb-6 bg-astral-gold bg-opacity-10 rounded-full flex items-center justify-center backdrop-blur-sm">
                 <Eye className="w-8 h-8 text-astral-gold" />
               </div>
               <h3 className="text-2xl font-cinzel font-semibold text-lunar-glow mb-4">
@@ -107,7 +149,7 @@ const LandingPage: React.FC = () => {
 
             {/* Feature 2 */}
             <div className="text-center p-8 card">
-              <div className="w-16 h-16 mx-auto mb-6 bg-amethyst-dream bg-opacity-20 rounded-full flex items-center justify-center">
+              <div className="w-16 h-16 mx-auto mb-6 bg-amethyst-dream bg-opacity-10 rounded-full flex items-center justify-center backdrop-blur-sm">
                 <TrendingUp className="w-8 h-8 text-amethyst-dream" />
               </div>
               <h3 className="text-2xl font-cinzel font-semibold text-lunar-glow mb-4">
@@ -121,7 +163,7 @@ const LandingPage: React.FC = () => {
 
             {/* Feature 3 */}
             <div className="text-center p-8 card">
-              <div className="w-16 h-16 mx-auto mb-6 bg-emerald-whisper bg-opacity-20 rounded-full flex items-center justify-center">
+              <div className="w-16 h-16 mx-auto mb-6 bg-emerald-whisper bg-opacity-10 rounded-full flex items-center justify-center backdrop-blur-sm">
                 <Shield className="w-8 h-8 text-emerald-whisper" />
               </div>
               <h3 className="text-2xl font-cinzel font-semibold text-lunar-glow mb-4">
@@ -135,7 +177,7 @@ const LandingPage: React.FC = () => {
           </div>
         </div>
       </section>      {/* Pricing Section */}
-      <section className="py-20 px-4 sm:px-6 lg:px-8">
+      <section className="py-16 px-4 sm:px-6 lg:px-8">
         <div className="max-w-4xl mx-auto">
           <h2 className="text-4xl md:text-5xl font-cinzel font-bold text-center text-lunar-glow mb-16">
             Choose Your Path
@@ -202,7 +244,7 @@ const LandingPage: React.FC = () => {
       </section>
 
       {/* CTA Section */}
-      <section className="py-20 px-4 sm:px-6 lg:px-8 text-center">
+      <section className="py-16 px-4 sm:px-6 lg:px-8 text-center">
         <div className="max-w-3xl mx-auto">
           <h2 className="text-4xl md:text-5xl font-cinzel font-bold text-lunar-glow mb-8">
             Begin Your Journey Today
@@ -225,6 +267,7 @@ const LandingPage: React.FC = () => {
 
       {/* Auth Modal */}
       <Modal
+        className="z-50"
         isOpen={showAuthModal}
         onClose={() => {
           console.log('Auth modal closing');

@@ -70,16 +70,18 @@ body {
 
 /* Card styles */
 .card {
-  background: var(--shadow-veil);
-  border: 1px solid var(--midnight-aura);
+  background: rgba(30, 30, 50, 0.3);
+  backdrop-filter: blur(10px);
+  border: 1px solid rgba(184, 156, 111, 0.2);
   border-radius: 12px;
   padding: 1.5rem;
   transition: all 0.3s ease;
 }
 
 .card:hover {
+  background: rgba(30, 30, 50, 0.5);
   border-color: var(--astral-gold);
-  box-shadow: 0 4px 20px rgba(184, 156, 111, 0.1);
+  box-shadow: 0 4px 20px rgba(184, 156, 111, 0.2);
 }
 
 /* Input styles */
