@@ -89,13 +89,17 @@ export default function TiltedCard({
     rotateFigcaption.set(0);
   }
 
+  // Calculate actual dimensions for auto containers
+  const actualContainerHeight = containerHeight === 'auto' ? imageHeight : containerHeight;
+  const actualContainerWidth = containerWidth === 'auto' ? imageWidth : containerWidth;
+
   return (
     <figure
       ref={ref}
       className="tilted-card-figure"
       style={{
-        height: containerHeight,
-        width: containerWidth,
+        height: actualContainerHeight,
+        width: actualContainerWidth,
       }}
       onMouseMove={handleMouse}
       onMouseEnter={handleMouseEnter}
@@ -126,6 +130,9 @@ export default function TiltedCard({
             width: imageWidth,
             height: imageHeight,
             transform: 'translateZ(0)',
+            border: '3px solid rgba(139, 69, 19, 0.9)',
+            borderRadius: '15px',
+            boxShadow: '0 8px 32px rgba(0, 0, 0, 0.4)',
           }}
         />
 
