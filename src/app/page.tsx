@@ -52,14 +52,12 @@ export default function Home() {
                 imageSrc="/assets/tarot_decks/rider_waite/0.jpg"
                 altText="The Fool"
                 captionText="The Fool - Major Arcana"
-                containerHeight="300px"
-                containerWidth="200px"
                 imageHeight="300px"
                 imageWidth="200px"
                 scaleOnHover={1.05}
                 rotateAmplitude={15}
                 showMobileWarning={true}
-                showTooltip={true}
+                showTooltip={false}
               />
             </div>
             
@@ -69,14 +67,12 @@ export default function Home() {
                 imageSrc="/assets/tarot_decks/rider_waite/1.jpg"
                 altText="The Magician"
                 captionText="The Magician - Major Arcana"
-                containerHeight="300px"
-                containerWidth="200px"
                 imageHeight="300px"
                 imageWidth="200px"
                 scaleOnHover={1.05}
                 rotateAmplitude={15}
                 showMobileWarning={true}
-                showTooltip={true}
+                showTooltip={false}
               />
             </div>
             
@@ -86,14 +82,12 @@ export default function Home() {
                 imageSrc="/assets/tarot_decks/rider_waite/2.jpg"
                 altText="The High Priestess"
                 captionText="The High Priestess - Major Arcana"
-                containerHeight="300px"
-                containerWidth="200px"
                 imageHeight="300px"
                 imageWidth="200px"
                 scaleOnHover={1.05}
                 rotateAmplitude={15}
                 showMobileWarning={true}
-                showTooltip={true}
+                showTooltip={false}
               />
             </div>
           </div>

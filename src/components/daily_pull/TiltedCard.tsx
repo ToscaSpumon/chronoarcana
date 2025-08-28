@@ -12,8 +12,6 @@ interface TiltedCardProps {
   imageSrc: string;
   altText?: string;
   captionText?: string;
-  containerHeight?: string;
-  containerWidth?: string;
   imageHeight?: string;
   imageWidth?: string;
   scaleOnHover?: number;
@@ -28,14 +26,12 @@ export default function TiltedCard({
   imageSrc,
   altText = "Tilted card image",
   captionText = "",
-  containerHeight = "300px",
-  containerWidth = "100%",
   imageHeight = "300px",
   imageWidth = "300px",
   scaleOnHover = 1.1,
   rotateAmplitude = 14,
   showMobileWarning = true,
-  showTooltip = true,
+  showTooltip = false,
   overlayContent = null,
   displayOverlayContent = false,
 }: TiltedCardProps) {
@@ -89,17 +85,13 @@ export default function TiltedCard({
     rotateFigcaption.set(0);
   }
 
-  // Calculate actual dimensions for auto containers
-  const actualContainerHeight = containerHeight === 'auto' ? imageHeight : containerHeight;
-  const actualContainerWidth = containerWidth === 'auto' ? imageWidth : containerWidth;
-
   return (
     <figure
       ref={ref}
       className="tilted-card-figure"
       style={{
-        height: actualContainerHeight,
-        width: actualContainerWidth,
+        height: imageHeight,
+        width: imageWidth,
       }}
       onMouseMove={handleMouse}
       onMouseEnter={handleMouseEnter}
@@ -127,8 +119,8 @@ export default function TiltedCard({
           alt={altText}
           className="tilted-card-img"
           style={{
-            width: imageWidth,
-            height: imageHeight,
+            width: '100%',
+            height: '100%',
             transform: 'translateZ(0)',
             border: '3px solid rgba(139, 69, 19, 0.9)',
             borderRadius: '15px',

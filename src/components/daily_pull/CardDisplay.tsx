@@ -3,7 +3,7 @@
 import React from 'react';
 import { TarotCard, DailyPull } from '@/types';
 import { cn } from '@/utils/cn';
-import { motion, useMotionValue, useSpring } from 'framer-motion';
+import TiltedCard from './TiltedCard';
 
 interface CardDisplayProps {
   card?: TarotCard;
@@ -42,44 +42,38 @@ const CardDisplay: React.FC<CardDisplayProps> = ({
 
   // Convert size classes to pixel values for TiltedCard
   const getTiltedCardDimensions = () => {
-    // Use the exact same aspect ratio as the global CSS: 2.5/3.5
-    // But make the container much larger to ensure the image fits without side spacing
-    const tarotRatio = 2.5 / 3.5;
+    // Tarot card aspect ratio: width:height = 2.5:3.5
+    // This means for every 2.5 units of width, we have 3.5 units of height
     
     switch (size) {
       case 'sm':
         return { 
-          width: '180px', // Much wider to ensure image fits
-          height: '252px', // Much taller to ensure image fits
-          containerHeight: '300px' // Extra height for 3D effects
+          width: '125px',  // Base width
+          height: '175px',  // Height = 125 * (3.5/2.5) = 175px
         };
       case 'md':
         return { 
-          width: '270px', // Much wider to ensure image fits
-          height: '378px', // Much taller to ensure image fits
-          containerHeight: '420px' // Extra height for 3D effects
+          width: '187px',  // Base width
+          height: '262px',  // Height = 187 * (3.5/2.5) = 262px
         };
       case 'lg':
         return { 
-          width: '315px', // Much wider to ensure image fits
-          height: '441px', // Much taller to ensure image fits
-          containerHeight: '480px' // Extra height for 3D effects
+          width: '218px',  // Base width
+          height: '305px',  // Height = 218 * (3.5/2.5) = 305px
         };
       default:
         return { 
-          width: '270px', // Much wider to ensure image fits
-          height: '378px', // Much taller to ensure image fits
-          containerHeight: '420px' // Extra height for 3D effects
+          width: '187px',  // Base width
+          height: '262px',  // Height = 187 * (3.5/2.5) = 262px
         };
     }
   };
 
-  const { width, height, containerHeight } = getTiltedCardDimensions();
+  const { width, height } = getTiltedCardDimensions();
 
   // Debug logging
   console.log('CardDisplay rendering:', { 
     cardName: displayCard.card_name, 
-    deckId: displayCard.deck_id, 
     imageUrl: displayCard.image_url,
     enableTiltedCard,
     size,
@@ -87,87 +81,6 @@ const CardDisplay: React.FC<CardDisplayProps> = ({
     cardObject: displayCard,
     pullObject: pull
   });
-
-  // Simple tilt effect using framer-motion
-  const SimpleTiltedCard = ({ imageSrc, altText }: { imageSrc: string; altText: string }) => {
-    const x = useMotionValue(0);
-    const y = useMotionValue(0);
-    const rotateX = useSpring(0, { stiffness: 100, damping: 30 });
-    const rotateY = useSpring(0, { stiffness: 100, damping: 30 });
-    const scale = useSpring(1, { stiffness: 100, damping: 30 });
-
-    // Debug logging for SimpleTiltedCard
-    console.log('SimpleTiltedCard component rendered:', { imageSrc, altText });
-
-    const handleMouseMove = (e: React.MouseEvent<HTMLDivElement>) => {
-      const rect = e.currentTarget.getBoundingClientRect();
-      const centerX = rect.left + rect.width / 2;
-      const centerY = rect.top + rect.height / 2;
-      
-      // Calculate rotation based on mouse position relative to center
-      // When mouse is at bottom, top should tilt down (negative rotateX for forward tilt)
-      const rotateXValue = ((e.clientY - centerY) / (rect.height / 2)) * -20; // Negative for correct forward tilt
-      const rotateYValue = ((e.clientX - centerX) / (rect.width / 2)) * 20;  // Positive for left/right tilt
-      
-      rotateX.set(rotateXValue);
-      rotateY.set(rotateYValue);
-      scale.set(1.1);
-    };
-
-    const handleMouseLeave = () => {
-      rotateX.set(0);
-      rotateY.set(0);
-      scale.set(1);
-    };
-
-    // Debug logging
-    console.log('SimpleTiltedCard rendering:', { imageSrc, altText, enableTiltedCard });
-
-    return (
-      <motion.div
-        className="perspective-1000"
-        style={{
-          width: width,
-          height: height,
-          display: 'flex',
-          alignItems: 'center',
-          justifyContent: 'center',
-        }}
-        onMouseMove={handleMouseMove}
-        onMouseLeave={handleMouseLeave}
-      >
-        <motion.div
-          style={{
-            width: width,
-            height: height,
-            rotateX,
-            rotateY,
-            scale,
-            transformStyle: 'preserve-3d',
-            filter: 'drop-shadow(0 8px 16px rgba(139, 69, 19, 0.3))',
-            display: 'flex',
-            alignItems: 'center',
-            justifyContent: 'center',
-          }}
-        >
-          <img
-            src={imageSrc}
-            alt={altText}
-            style={{
-              width: '100%',
-              height: '100%',
-                            objectFit: 'fill',
-              boxShadow: '0 12px 40px rgba(0, 0, 0, 0.6)',
-              transition: 'all 0.3s ease',
-              cursor: 'pointer',
-            }}
-            onLoad={() => console.log('Image loaded successfully:', imageSrc)}
-            onError={(e) => console.error('Image failed to load:', imageSrc, e)}
-          />
-        </motion.div>
-      </motion.div>
-    );
-  };
 
   return (
     <div className={cn('space-y-6', className)}>
@@ -185,9 +98,11 @@ const CardDisplay: React.FC<CardDisplayProps> = ({
                   width: width,
                   height: height,
                 }}>
-                  <SimpleTiltedCard
+                  <TiltedCard
                     imageSrc={displayCard.image_url}
                     altText={displayCard.card_name}
+                    imageWidth={width}
+                    imageHeight={height}
                   />
                 </div>
               );
