@@ -12,6 +12,7 @@ import DataVisualization from '@/components/dashboard/DataVisualization';
 import DeckToggle from '@/components/dashboard/DeckToggle';
 import UpgradePrompt from '@/components/dashboard/UpgradePrompt';
 import Dock from '@/components/common/Dock';
+import AnimatedBackground from '@/components/common/AnimatedBackground';
 import { getDaysUntilRetention, getMostPulledCard } from '@/utils/helpers';
 import { APP_CONFIG } from '@/utils/constants';
 import { userAPI } from '@/lib/api';
@@ -203,6 +204,9 @@ const DashboardWithDock: React.FC = () => {
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-deep-void via-shadow-veil to-deep-void relative">
+      {/* Animated Background */}
+      <AnimatedBackground starCount={80} />
+      
       <Navbar />
       
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 pb-40">

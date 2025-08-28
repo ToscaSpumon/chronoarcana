@@ -12,6 +12,7 @@ import PhysicalCardSelector from '@/components/daily_pull/PhysicalCardSelector';
 import CardDisplay from '@/components/daily_pull/CardDisplay';
 import NoteEditor from '@/components/daily_pull/NoteEditor';
 import DeckToggle from '@/components/dashboard/DeckToggle';
+import FloatingParticles from '@/components/common/FloatingParticles';
 import { formatDate, getTodayDate } from '@/utils/helpers';
 
 interface DailyPullSectionProps {
@@ -61,11 +62,16 @@ const DailyPullSection: React.FC<DailyPullSectionProps> = ({
     return (
       <div className="grid lg:grid-cols-3 gap-8">
         {/* Main Content - Left Column */}
-        <div className="lg:col-span-2">
-          <div className="card">
-            <div className="text-center">
-              <div className="w-20 h-20 mx-auto mb-6 bg-astral-gold bg-opacity-20 rounded-full flex items-center justify-center">
-                <Calendar className="w-10 h-10 text-astral-gold" />
+        <div className="lg:col-span-2 relative">
+          <FloatingParticles particleCount={12} />
+          <div className="card relative overflow-hidden">
+            {/* Mystical glow effect */}
+            <div className="absolute inset-0 bg-gradient-to-br from-astral-gold/5 via-transparent to-amethyst-dream/5 rounded-lg" />
+            <div className="absolute top-0 left-1/2 transform -translate-x-1/2 w-32 h-32 bg-astral-gold/10 rounded-full blur-3xl" />
+            
+            <div className="relative z-10 text-center">
+              <div className="w-20 h-20 mx-auto mb-6 bg-gradient-to-br from-astral-gold/20 to-amethyst-dream/20 rounded-full flex items-center justify-center border border-astral-gold/30 shadow-lg">
+                <Calendar className="w-10 h-10 text-astral-gold drop-shadow-lg" />
               </div>
               
               <h2 className="text-3xl font-cinzel font-bold text-lunar-glow mb-4">
@@ -99,27 +105,33 @@ const DailyPullSection: React.FC<DailyPullSectionProps> = ({
               )}
 
               <div className="flex flex-col sm:flex-row gap-4 justify-center">
-                <Button
-                  variant="primary"
-                  size="lg"
-                  onClick={() => setShowDigitalPull(true)}
-                  className="flex items-center space-x-2"
-                  disabled={!userDeckId}
-                >
-                  <Shuffle className="w-5 h-5" />
-                  <span>Digital Pull</span>
-                </Button>
+                <div className="relative group">
+                  <div className="absolute inset-0 bg-gradient-to-r from-emerald-whisper/20 to-sapphire-haze/20 rounded-lg blur-lg group-hover:blur-xl transition-all duration-300" />
+                  <Button
+                    variant="primary"
+                    size="lg"
+                    onClick={() => setShowDigitalPull(true)}
+                    className="flex items-center space-x-2 relative z-10 shadow-lg hover:shadow-emerald-whisper/25 transition-all duration-300"
+                    disabled={!userDeckId}
+                  >
+                    <Shuffle className="w-5 h-5" />
+                    <span>Digital Pull</span>
+                  </Button>
+                </div>
                 
-                <Button
-                  variant="secondary"
-                  size="lg"
-                  onClick={() => setShowPhysicalPull(true)}
-                  className="flex items-center space-x-2"
-                  disabled={!userDeckId}
-                >
-                  <Hand className="w-5 h-5" />
-                  <span>Physical Pull</span>
-                </Button>
+                <div className="relative group">
+                  <div className="absolute inset-0 bg-gradient-to-r from-amethyst-dream/20 to-astral-gold/20 rounded-lg blur-lg group-hover:blur-xl transition-all duration-300" />
+                  <Button
+                    variant="secondary"
+                    size="lg"
+                    onClick={() => setShowPhysicalPull(true)}
+                    className="flex items-center space-x-2 relative z-10 shadow-lg hover:shadow-amethyst-dream/25 transition-all duration-300"
+                    disabled={!userDeckId}
+                  >
+                    <Hand className="w-5 h-5" />
+                    <span>Physical Pull</span>
+                  </Button>
+                </div>
               </div>
 
               {!userDeckId && (
@@ -142,31 +154,37 @@ const DailyPullSection: React.FC<DailyPullSectionProps> = ({
           </div>
           
           {/* Quick Stats */}
-          <div className="card relative z-10">
-            <h3 className="text-xl font-cinzel font-semibold text-lunar-glow mb-4">
-              Quick Stats
-            </h3>
-            <div className="space-y-3">
-              <div className="flex justify-between">
-                <span className="text-lunar-glow opacity-70">Total Pulls (60 days)</span>
-                <span className="text-astral-gold font-semibold">{recentPulls60Days.length}</span>
-              </div>
-              <div className="flex justify-between">
-                <span className="text-lunar-glow opacity-70">This Month</span>
-                <span className="text-astral-gold font-semibold">
-                  {recentPulls60Days.filter(pull => {
-                    const pullDate = new Date(pull.pull_date);
-                    const now = new Date();
-                    return pullDate.getMonth() === now.getMonth() && 
-                           pullDate.getFullYear() === now.getFullYear();
-                  }).length}
-                </span>
-              </div>
-              <div className="flex justify-between">
-                <span className="text-lunar-glow opacity-70">Streak</span>
-                <span className="text-astral-gold font-semibold">
-                  {todaysPull ? '🔥 Active' : '💤 Inactive'}
-                </span>
+          <div className="card relative z-10 overflow-hidden">
+            {/* Mystical glow effect */}
+            <div className="absolute inset-0 bg-gradient-to-br from-crimson-stain/5 via-transparent to-amber-glow/5 rounded-lg" />
+            <div className="absolute top-0 right-0 w-24 h-24 bg-crimson-stain/10 rounded-full blur-2xl" />
+            
+            <div className="relative z-10">
+              <h3 className="text-xl font-cinzel font-semibold text-lunar-glow mb-4 drop-shadow-lg">
+                Quick Stats
+              </h3>
+              <div className="space-y-3">
+                <div className="flex justify-between items-center p-2 rounded-lg bg-midnight-aura/50 backdrop-blur-sm border border-crimson-stain/20">
+                  <span className="text-lunar-glow opacity-70">Total Pulls (60 days)</span>
+                  <span className="text-astral-gold font-semibold text-lg">{recentPulls60Days.length}</span>
+                </div>
+                <div className="flex justify-between items-center p-2 rounded-lg bg-midnight-aura/50 backdrop-blur-sm border border-amber-glow/20">
+                  <span className="text-lunar-glow opacity-70">This Month</span>
+                  <span className="text-astral-gold font-semibold text-lg">
+                    {recentPulls60Days.filter(pull => {
+                      const pullDate = new Date(pull.pull_date);
+                      const now = new Date();
+                      return pullDate.getMonth() === now.getMonth() && 
+                             pullDate.getFullYear() === now.getFullYear();
+                    }).length}
+                  </span>
+                </div>
+                <div className="flex justify-between items-center p-2 rounded-lg bg-midnight-aura/50 backdrop-blur-sm border border-emerald-whisper/20">
+                  <span className="text-lunar-glow opacity-70">Streak</span>
+                  <span className="text-astral-gold font-semibold text-lg">
+                    {todaysPull ? '🔥 Active' : '💤 Inactive'}
+                  </span>
+                </div>
               </div>
             </div>
           </div>
@@ -193,11 +211,16 @@ const DailyPullSection: React.FC<DailyPullSectionProps> = ({
   return (
     <div className="grid lg:grid-cols-3 gap-8">
       {/* Main Content - Left Column */}
-      <div className="lg:col-span-2 space-y-6">
+      <div className="lg:col-span-2 space-y-6 relative">
+        <FloatingParticles particleCount={12} />
         {/* Today's Card Display */}
-        <div className="card">
-          <div className="text-center mb-6">
-            <h2 className="text-3xl font-cinzel font-bold text-lunar-glow mb-2">
+        <div className="card relative overflow-hidden">
+          {/* Mystical glow effect */}
+          <div className="absolute inset-0 bg-gradient-to-br from-emerald-whisper/5 via-transparent to-sapphire-haze/5 rounded-lg" />
+          <div className="absolute top-0 left-1/2 transform -translate-x-1/2 w-40 h-40 bg-emerald-whisper/10 rounded-full blur-3xl" />
+          
+          <div className="relative z-10 text-center mb-6">
+            <h2 className="text-3xl font-cinzel font-bold text-lunar-glow mb-2 drop-shadow-lg">
               Today's Card
             </h2>
             <p className="text-lunar-glow opacity-70 text-lg">
@@ -226,14 +249,20 @@ const DailyPullSection: React.FC<DailyPullSectionProps> = ({
 
         {/* Notes Section */}
         {todaysPull.notes && (
-          <div className="card">
-            <h3 className="text-xl font-cinzel font-semibold text-lunar-glow mb-4">
-              Your Notes
-            </h3>
-            <div className="bg-midnight-aura rounded-lg p-4">
-              <p className="text-lunar-glow whitespace-pre-wrap leading-relaxed">
-                {todaysPull.notes}
-              </p>
+          <div className="card relative overflow-hidden">
+            {/* Mystical glow effect */}
+            <div className="absolute inset-0 bg-gradient-to-br from-amethyst-dream/5 via-transparent to-astral-gold/5 rounded-lg" />
+            <div className="absolute bottom-0 right-0 w-32 h-32 bg-amethyst-dream/10 rounded-full blur-3xl" />
+            
+            <div className="relative z-10">
+              <h3 className="text-xl font-cinzel font-semibold text-lunar-glow mb-4 drop-shadow-lg">
+                Your Notes
+              </h3>
+              <div className="bg-midnight-aura/80 backdrop-blur-sm rounded-lg p-4 border border-amethyst-dream/20">
+                <p className="text-lunar-glow whitespace-pre-wrap leading-relaxed">
+                  {todaysPull.notes}
+                </p>
+              </div>
             </div>
           </div>
         )}
@@ -250,31 +279,37 @@ const DailyPullSection: React.FC<DailyPullSectionProps> = ({
         </div>
         
         {/* Quick Stats */}
-        <div className="card relative z-10">
-          <h3 className="text-xl font-cinzel font-semibold text-lunar-glow mb-4">
-            Quick Stats
-          </h3>
-          <div className="space-y-3">
-            <div className="flex justify-between">
-              <span className="text-lunar-glow opacity-70">Total Pulls (60 days)</span>
-              <span className="text-astral-gold font-semibold">{recentPulls60Days.length}</span>
-            </div>
-            <div className="flex justify-between">
-              <span className="text-lunar-glow opacity-70">This Month</span>
-              <span className="text-astral-gold font-semibold">
-                {recentPulls60Days.filter(pull => {
-                  const pullDate = new Date(pull.pull_date);
-                  const now = new Date();
-                  return pullDate.getMonth() === now.getMonth() && 
-                         pullDate.getFullYear() === now.getFullYear();
-                }).length}
-              </span>
-            </div>
-            <div className="flex justify-between">
-              <span className="text-lunar-glow opacity-70">Streak</span>
-              <span className="text-astral-gold font-semibold">
-                {todaysPull ? '🔥 Active' : '💤 Inactive'}
-              </span>
+        <div className="card relative z-10 overflow-hidden">
+          {/* Mystical glow effect */}
+          <div className="absolute inset-0 bg-gradient-to-br from-crimson-stain/5 via-transparent to-amber-glow/5 rounded-lg" />
+          <div className="absolute top-0 right-0 w-24 h-24 bg-crimson-stain/10 rounded-full blur-2xl" />
+          
+          <div className="relative z-10">
+            <h3 className="text-xl font-cinzel font-semibold text-lunar-glow mb-4 drop-shadow-lg">
+              Quick Stats
+            </h3>
+            <div className="space-y-3">
+              <div className="flex justify-between items-center p-2 rounded-lg bg-midnight-aura/50 backdrop-blur-sm border border-crimson-stain/20">
+                <span className="text-lunar-glow opacity-70">Total Pulls (60 days)</span>
+                <span className="text-astral-gold font-semibold text-lg">{recentPulls60Days.length}</span>
+              </div>
+              <div className="flex justify-between items-center p-2 rounded-lg bg-midnight-aura/50 backdrop-blur-sm border border-amber-glow/20">
+                <span className="text-lunar-glow opacity-70">This Month</span>
+                <span className="text-astral-gold font-semibold text-lg">
+                  {recentPulls60Days.filter(pull => {
+                    const pullDate = new Date(pull.pull_date);
+                    const now = new Date();
+                    return pullDate.getMonth() === now.getMonth() && 
+                           pullDate.getFullYear() === now.getFullYear();
+                  }).length}
+                </span>
+              </div>
+              <div className="flex justify-between items-center p-2 rounded-lg bg-midnight-aura/50 backdrop-blur-sm border border-emerald-whisper/20">
+                <span className="text-lunar-glow opacity-70">Streak</span>
+                <span className="text-astral-gold font-semibold text-lg">
+                  {todaysPull ? '🔥 Active' : '💤 Inactive'}
+                </span>
+              </div>
             </div>
           </div>
         </div>
