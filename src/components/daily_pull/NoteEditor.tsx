@@ -93,7 +93,7 @@ const NoteEditor: React.FC<NoteEditorProps> = ({
       </div>
 
       {/* Actions */}
-      <div className="flex justify-end space-x-4">
+      <div className="flex justify-end space-x-4 mb-6">
         <Button
           variant="secondary"
           onClick={onCancel}

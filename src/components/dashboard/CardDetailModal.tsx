@@ -191,7 +191,7 @@ const CardDetailModal: React.FC<CardDetailModalProps> = ({
                 placeholder="Add your personal notes about this card pull..."
                 className="w-full h-32 p-3 bg-deep-void border border-midnight-aura rounded-lg text-lunar-glow placeholder-lunar-glow placeholder-opacity-50 resize-none focus:outline-none focus:ring-2 focus:ring-astral-gold focus:border-transparent"
               />
-              <div className="flex items-center space-x-3">
+              <div className="flex items-center space-x-3 mb-6">
                 <Button
                   onClick={handleSaveNotes}
                   disabled={isSaving}

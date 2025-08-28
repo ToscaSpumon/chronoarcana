@@ -205,7 +205,7 @@ const DashboardWithDock: React.FC = () => {
     <div className="min-h-screen bg-gradient-to-br from-deep-void via-shadow-veil to-deep-void relative">
       <Navbar />
       
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 pb-32">
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 pb-40">
         {/* Header */}
         <div className="mb-8">
           <h1 className="text-4xl md:text-5xl font-cinzel font-bold text-lunar-glow mb-4">
@@ -251,7 +251,7 @@ const DashboardWithDock: React.FC = () => {
       </div>
 
       {/* Dock Navigation */}
-      <div className="fixed bottom-0 left-0 right-0 z-50 flex justify-center">
+      <div className="fixed bottom-0 left-0 right-0 z-40 flex justify-center">
         <Dock 
           items={dockItems}
           className="bg-deep-void/90 backdrop-blur-sm border-lunar-glow/20"

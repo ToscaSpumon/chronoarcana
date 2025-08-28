@@ -7,7 +7,7 @@
 
 .dock-panel {
   position: absolute;
-  bottom: 0.5rem;
+  bottom: 1rem;
   left: 50%;
   transform: translateX(-50%);
   display: flex;
@@ -20,6 +20,7 @@
   padding: 0 0.5rem 0.5rem;
   backdrop-filter: blur(10px);
   box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
+  pointer-events: auto;
 }
 
 .dock-item {
