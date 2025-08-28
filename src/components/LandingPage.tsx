@@ -201,28 +201,6 @@ const LandingPage: React.FC = () => {
         </div>
       </section>
 
-      {/* CTA Section */}
-      <section className="py-20 px-4 sm:px-6 lg:px-8 text-center">
-        <div className="max-w-3xl mx-auto">
-          <h2 className="text-4xl md:text-5xl font-cinzel font-bold text-lunar-glow mb-8">
-            Begin Your Journey Today
-          </h2>
-          <p className="text-xl text-lunar-glow opacity-90 mb-12">
-            Join thousands of spiritual seekers who have discovered deeper insights 
-            through their daily Tarot practice.
-          </p>
-          
-          <Button
-            variant="primary"
-            size="lg"
-            onClick={() => openAuthModal('signup')}
-            className="animate-glow"
-          >
-            Start Your Free Journey
-          </Button>
-        </div>
-      </section>
-
       {/* Auth Modal */}
       <Modal
         isOpen={showAuthModal}
