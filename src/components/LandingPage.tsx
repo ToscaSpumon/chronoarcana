@@ -5,6 +5,7 @@ import { Moon, Stars, Eye, TrendingUp, Shield } from 'lucide-react';
 import Button from '@/components/common/Button';
 import Modal from '@/components/common/Modal';
 import AuthForms from '@/components/auth/AuthForms';
+import LightRays from '@/components/LightRays';
 import { APP_CONFIG } from '@/utils/constants';
 
 const LandingPage: React.FC = () => {
@@ -17,9 +18,28 @@ const LandingPage: React.FC = () => {
   };
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-deep-void via-shadow-veil to-deep-void">
-      {/* Navigation */}
-      <nav className="border-b border-midnight-aura">
+    <div className="min-h-screen bg-gradient-to-br from-deep-void via-shadow-veil to-deep-void relative">
+      {/* LightRays Background Animation - Now covering the entire landing page */}
+      <div className="absolute inset-0 z-0">
+        <LightRays
+          raysOrigin="top-center"
+          raysColor="#fbbf24"
+          raysSpeed={0.6}
+          lightSpread={1.5}
+          rayLength={3.0}
+          pulsating={true}
+          fadeDistance={1.5}
+          saturation={1.3}
+          followMouse={true}
+          mouseInfluence={0.2}
+          noiseAmount={0.05}
+          distortion={0.03}
+          className="w-full h-full"
+        />
+      </div>
+      
+      {/* Navigation - Positioned at the very top over everything */}
+      <nav className="absolute top-0 left-0 right-0 z-30">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="flex justify-between items-center h-16">
             <h1 className="text-2xl font-cinzel font-bold text-astral-gold">
@@ -43,24 +63,16 @@ const LandingPage: React.FC = () => {
           </div>
         </div>
       </nav>
-
-      {/* Hero Section */}
-      <section className="relative py-20 px-4 sm:px-6 lg:px-8">
+      
+      {/* Hero Section - Now positioned right below the navigation bar */}
+      <section className="relative pt-20 pb-16 flex items-center justify-center px-4 sm:px-6 lg:px-8">
         <div className="max-w-4xl mx-auto text-center">
-          {/* Decorative elements */}
-          <div className="absolute top-10 left-10 text-astral-gold opacity-20">
-            <Moon className="w-16 h-16 animate-pulse" />
-          </div>
-          <div className="absolute bottom-10 right-10 text-amethyst-dream opacity-20">
-            <Stars className="w-20 h-20 animate-pulse" />
-          </div>
-          
           <h1 className="text-5xl md:text-7xl font-cinzel font-bold text-lunar-glow mb-8 leading-tight">
             Unveil Your
             <span className="text-astral-gold block">Daily Insights</span>
           </h1>
           
-          <p className="text-xl md:text-2xl text-lunar-glow opacity-90 mb-12 max-w-3xl mx-auto leading-relaxed">
+          <p className="text-xl md:text-2xl text-lunar-glow opacity-95 mb-12 max-w-3xl mx-auto leading-relaxed">
             Track your daily Tarot card pulls, discover hidden patterns in your readings, 
             and embark on a profound journey of self-discovery with ChronoArcana.
           </p>
@@ -78,13 +90,16 @@ const LandingPage: React.FC = () => {
               variant="secondary"
               size="lg"
               onClick={() => openAuthModal('signin')}
+
             >
               Sign In
             </Button>
           </div>
         </div>
-      </section>      {/* Features Section */}
-      <section className="py-20 px-4 sm:px-6 lg:px-8 bg-shadow-veil bg-opacity-30">
+      </section>
+      
+      {/* Features Section */}
+      <section className="py-20 px-4 sm:px-6 lg:px-8 relative">
         <div className="max-w-6xl mx-auto">
           <h2 className="text-4xl md:text-5xl font-cinzel font-bold text-center text-lunar-glow mb-16">
             Your Mystical Companion
@@ -135,7 +150,7 @@ const LandingPage: React.FC = () => {
           </div>
         </div>
       </section>      {/* Pricing Section */}
-      <section className="py-20 px-4 sm:px-6 lg:px-8">
+      <section className="py-20 px-4 sm:px-6 lg:px-8 relative">
         <div className="max-w-4xl mx-auto">
           <h2 className="text-4xl md:text-5xl font-cinzel font-bold text-center text-lunar-glow mb-16">
             Choose Your Path
@@ -168,7 +183,7 @@ const LandingPage: React.FC = () => {
             </div>
 
             {/* Premium Plan */}
-            <div className="card text-center border-2 border-astral-gold relative">
+            <div className="card text-center relative">
               <div className="absolute -top-3 left-1/2 transform -translate-x-1/2">
                 <span className="bg-astral-gold text-deep-void px-4 py-1 text-sm font-semibold rounded-full">
                   RECOMMENDED
@@ -202,7 +217,7 @@ const LandingPage: React.FC = () => {
       </section>
 
       {/* CTA Section */}
-      <section className="py-20 px-4 sm:px-6 lg:px-8 text-center">
+      <section className="py-20 px-4 sm:px-6 lg:px-8 text-center relative">
         <div className="max-w-3xl mx-auto">
           <h2 className="text-4xl md:text-5xl font-cinzel font-bold text-lunar-glow mb-8">
             Begin Your Journey Today
@@ -231,6 +246,7 @@ const LandingPage: React.FC = () => {
           setShowAuthModal(false);
         }}
         size="md"
+        className="z-50"
       >
         <AuthForms
           mode={authMode}

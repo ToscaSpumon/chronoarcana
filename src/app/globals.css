@@ -35,43 +35,10 @@ body {
   line-height: 1.6;
 }
 
-/* Custom scrollbar for dark theme */
-::-webkit-scrollbar {
-  width: 8px;
-}
-
-::-webkit-scrollbar-track {
-  background: var(--shadow-veil);
-}
-
-::-webkit-scrollbar-thumb {
-  background: var(--midnight-aura);
-  border-radius: 4px;
-}
-
-::-webkit-scrollbar-thumb:hover {
-  background: var(--astral-gold);
-}
-
-/* Custom button styles */
-@layer components {
-  .btn-primary {
-    @apply bg-astral-gold text-deep-void font-semibold px-6 py-3 rounded-lg transition-all duration-300 hover:bg-opacity-90 hover:scale-105 hover:shadow-lg;
-  }
-  
-  .btn-secondary {
-    @apply bg-shadow-veil text-lunar-glow border border-midnight-aura font-semibold px-6 py-3 rounded-lg transition-all duration-300 hover:bg-midnight-aura hover:border-lunar-glow;
-  }
-  
-  .btn-ghost {
-    @apply text-lunar-glow font-semibold px-6 py-3 rounded-lg transition-all duration-300 hover:bg-shadow-veil hover:text-astral-gold;
-  }
-}
-
-/* Card styles */
+/* Card styles - transparent to avoid color breaks */
 .card {
-  background: var(--shadow-veil);
-  border: 1px solid var(--midnight-aura);
+  background: transparent;
+  border: none;
   border-radius: 12px;
   padding: 1.5rem;
   transition: all 0.3s ease;
@@ -82,9 +49,9 @@ body {
   box-shadow: 0 4px 20px rgba(184, 156, 111, 0.1);
 }
 
-/* Input styles */
+/* Input styles - transparent to avoid color breaks */
 .input {
-  background: var(--shadow-veil);
+  background: transparent;
   border: 1px solid var(--midnight-aura);
   color: var(--lunar-glow);
   border-radius: 8px;
@@ -96,10 +63,6 @@ body {
   outline: none;
   border-color: var(--astral-gold);
   box-shadow: 0 0 0 3px rgba(184, 156, 111, 0.1);
-}
-
-.input::placeholder {
-  color: #C0C0C8;
 }
 
 /* Animation utilities */
@@ -114,38 +77,6 @@ body {
   to {
     box-shadow: 0 0 20px rgba(184, 156, 111, 0.8), 0 0 30px rgba(184, 156, 111, 0.4);
   }
-}
-
-.animate-fade-in {
-  animation: fadeIn 0.5s ease-in-out;
-}
-
-@keyframes fadeIn {
-  from { opacity: 0; transform: translateY(20px); }
-  to { opacity: 1; transform: translateY(0); }
-}
-
-/* Tarot card specific styles */
-.tarot-card {
-  border-radius: 12px;
-  overflow: visible;
-  transition: all 0.3s ease;
-  background: transparent;
-  border: none;
-}
-
-.tarot-card:hover {
-  transform: translateY(-4px);
-  border-color: var(--astral-gold);
-  box-shadow: 0 8px 25px rgba(184, 156, 111, 0.2);
-}
-
-.tarot-card img {
-  width: auto;
-  height: auto;
-  max-width: 100%;
-  max-height: 100%;
-  object-fit: none;
 }
 
 /* Typography utilities */
