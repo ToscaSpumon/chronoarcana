@@ -122,9 +122,9 @@ export default function TiltedCard({
             width: '100%',
             height: '100%',
             transform: 'translateZ(0)',
-            border: '3px solid rgba(139, 69, 19, 0.9)',
+            border: '3px solid rgba(184, 156, 111, 0.9)',
             borderRadius: '15px',
-            boxShadow: '0 8px 32px rgba(0, 0, 0, 0.4)',
+            boxShadow: '0 4px 16px rgba(184, 156, 111, 0.1)',
           }}
         />
 

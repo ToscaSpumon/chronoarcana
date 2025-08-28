@@ -44,8 +44,8 @@
   border-radius: 15px;
   will-change: transform;
   transform: translateZ(0);
-  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
-  border: 2px solid rgba(139, 69, 19, 0.3);
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.2);
+  border: 2px solid rgba(184, 156, 111, 0.2);
   transition: all 0.3s ease;
   filter: drop-shadow(0 4px 8px rgba(0, 0, 0, 0.2));
   background-color: transparent;
@@ -53,8 +53,8 @@
 }
 
 .tilted-card-img:hover {
-  box-shadow: 0 20px 60px rgba(0, 0, 0, 0.5);
-  filter: drop-shadow(0 12px 24px rgba(139, 69, 19, 0.4));
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.3);
+  filter: drop-shadow(0 6px 12px rgba(184, 156, 111, 0.2));
   transform: translateZ(20px);
 }
 
@@ -96,13 +96,13 @@
 
 /* Ensure the tilted card border is always visible and not overridden */
 .tilted-card-figure .tilted-card-inner .tilted-card-img {
-  border: 3px solid rgba(139, 69, 19, 0.9) !important;
+  border: 3px solid rgba(184, 156, 111, 0.9) !important;
   border-radius: 15px !important;
-  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.4) !important;
+  box-shadow: 0 4px 16px rgba(184, 156, 111, 0.1) !important;
 }
 
 .tilted-card-figure .tilted-card-inner .tilted-card-img:hover {
-  border-color: rgba(139, 69, 19, 1) !important;
-  box-shadow: 0 20px 60px rgba(0, 0, 0, 0.6) !important;
-  filter: drop-shadow(0 12px 24px rgba(139, 69, 19, 0.8)) !important;
+  border-color: rgba(184, 156, 111, 1) !important;
+  box-shadow: 0 8px 24px rgba(184, 156, 111, 0.15) !important;
+  filter: drop-shadow(0 6px 12px rgba(184, 156, 111, 0.3)) !important;
 }
