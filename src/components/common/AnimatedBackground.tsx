@@ -45,7 +45,7 @@ const AnimatedBackground: React.FC<AnimatedBackgroundProps> = ({
   }, [starCount]);
 
   return (
-    <div className={`fixed inset-0 pointer-events-none overflow-hidden ${className}`}>
+    <div className={`absolute inset-0 pointer-events-none overflow-hidden ${className}`}>
       {/* Moon */}
       <div className="absolute top-20 right-20 w-24 h-24">
         <div className="relative w-full h-full">

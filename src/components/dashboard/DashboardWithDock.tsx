@@ -205,11 +205,13 @@ const DashboardWithDock: React.FC = () => {
   return (
     <div className="min-h-screen bg-gradient-to-br from-deep-void via-shadow-veil to-deep-void relative">
       {/* Animated Background */}
-      <AnimatedBackground starCount={80} />
+      <div className="absolute inset-0">
+        <AnimatedBackground starCount={80} />
+      </div>
       
       <Navbar />
       
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 pb-40">
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 pb-40 relative z-10">
         {/* Header */}
         <div className="mb-8">
           <h1 className="text-4xl md:text-5xl font-cinzel font-bold text-lunar-glow mb-4">
