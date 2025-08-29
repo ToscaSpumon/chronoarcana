@@ -139,7 +139,7 @@ const DeckToggle: React.FC<DeckToggleProps> = ({ currentDeckId, onDeckChange }) 
   }
 
   return (
-    <div className="card p-4 deck-toggle flex flex-col overflow-visible">
+    <div className="card p-4 deck-toggle flex flex-col overflow-visible" style={{ minHeight: '400px' }}>
       <div className="space-y-4">
         {/* Current Deck Cover - Full Width */}
         <div className="relative w-full">

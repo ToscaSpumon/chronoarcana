@@ -1,0 +1,70 @@
+[33mcommit b182643b6cd9a83b4951bc0c85e835195ff8b171[m
+Author: ToscaSpumon <Toscaspumon@gmail.com>
+Date:   Fri Aug 29 10:44:12 2025 -0400
+
+    Fixed "Current Deck" positioning to match the "Todays Card" height
+
+[1mdiff --git a/src/components/dashboard/DailyPullSection.tsx b/src/components/dashboard/DailyPullSection.tsx[m
+[1mindex 05c1c7c..cac6686 100644[m
+[1m--- a/src/components/dashboard/DailyPullSection.tsx[m
+[1m+++ b/src/components/dashboard/DailyPullSection.tsx[m
+[36m@@ -64,7 +64,7 @@[m [mconst DailyPullSection: React.FC<DailyPullSectionProps> = ({[m
+         {/* Main Content - Left Column */}[m
+         <div className="lg:col-span-2 relative">[m
+           <FloatingParticles particleCount={12} />[m
+[31m-          <div className="card relative overflow-hidden">[m
+[32m+[m[32m          <div className="card relative overflow-hidden" style={{ minHeight: '400px' }}>[m
+             {/* Mystical glow effect */}[m
+             <div className="absolute inset-0 bg-gradient-to-br from-astral-gold/5 via-transparent to-amethyst-dream/5 rounded-lg" />[m
+             <div className="absolute top-0 left-1/2 transform -translate-x-1/2 w-32 h-32 bg-astral-gold/10 rounded-full blur-3xl" />[m
+[36m@@ -144,9 +144,9 @@[m [mconst DailyPullSection: React.FC<DailyPullSectionProps> = ({[m
+         </div>[m
+ [m
+         {/* Right Sidebar */}[m
+[31m-        <div className="space-y-6">[m
+[32m+[m[32m        <div className="space-y-6 flex flex-col">[m
+           {/* Deck Toggle */}[m
+[31m-          <div className="relative z-20">[m
+[32m+[m[32m          <div className="relative z-20 mt-8">[m
+             <DeckToggle[m
+               currentDeckId={userDeckId}[m
+               onDeckChange={onDeckChange}[m
+[36m@@ -154,7 +154,7 @@[m [mconst DailyPullSection: React.FC<DailyPullSectionProps> = ({[m
+           </div>[m
+           [m
+           {/* Quick Stats */}[m
+[31m-          <div className="card relative z-10 overflow-hidden">[m
+[32m+[m[32m          <div className="card relative z-10 overflow-hidden flex-1">[m
+             {/* Mystical glow effect */}[m
+             <div className="absolute inset-0 bg-gradient-to-br from-crimson-stain/5 via-transparent to-amber-glow/5 rounded-lg" />[m
+             <div className="absolute top-0 right-0 w-24 h-24 bg-crimson-stain/10 rounded-full blur-2xl" />[m
+[36m@@ -214,7 +214,7 @@[m [mconst DailyPullSection: React.FC<DailyPullSectionProps> = ({[m
+       <div className="lg:col-span-2 space-y-6 relative">[m
+         <FloatingParticles particleCount={12} />[m
+         {/* Today's Card Display */}[m
+[31m-        <div className="card relative overflow-hidden">[m
+[32m+[m[32m        <div className="card relative overflow-hidden" style={{ minHeight: '400px' }}>[m
+           {/* Mystical glow effect */}[m
+           <div className="absolute inset-0 bg-gradient-to-br from-emerald-whisper/5 via-transparent to-sapphire-haze/5 rounded-lg" />[m
+           <div className="absolute top-0 left-1/2 transform -translate-x-1/2 w-40 h-40 bg-emerald-whisper/10 rounded-full blur-3xl" />[m
+[36m@@ -269,9 +269,9 @@[m [mconst DailyPullSection: React.FC<DailyPullSectionProps> = ({[m
+       </div>[m
+ [m
+       {/* Right Sidebar */}[m
+[31m-      <div className="space-y-6">[m
+[32m+[m[32m      <div className="space-y-6 flex flex-col">[m
+         {/* Deck Toggle */}[m
+[31m-        <div className="relative z-20">[m
+[32m+[m[32m        <div className="relative z-20 mt-6">[m
+           <DeckToggle[m
+             currentDeckId={userDeckId}[m
+             onDeckChange={onDeckChange}[m
+[36m@@ -279,7 +279,7 @@[m [mconst DailyPullSection: React.FC<DailyPullSectionProps> = ({[m
+         </div>[m
+         [m
+         {/* Quick Stats */}[m
+[31m-        <div className="card relative z-10 overflow-hidden">[m
+[32m+[m[32m        <div className="card relative z-10 overflow-hidden flex-1">[m
+           {/* Mystical glow effect */}[m
+           <div className="absolute inset-0 bg-gradient-to-br from-crimson-stain/5 via-transparent to-amber-glow/5 rounded-lg" />[m
+           <div className="absolute top-0 right-0 w-24 h-24 bg-crimson-stain/10 rounded-full blur-2xl" />[m

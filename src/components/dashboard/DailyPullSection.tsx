@@ -267,7 +267,7 @@ const DailyPullSection: React.FC<DailyPullSectionProps> = ({
       {/* Right Sidebar */}
       <div className="space-y-6 flex flex-col">
         {/* Deck Toggle */}
-        <div className="relative z-20 mt-6">
+        <div className="relative z-20 mt-0">
           <DeckToggle
             currentDeckId={userDeckId}
             onDeckChange={onDeckChange}
@@ -275,7 +275,7 @@ const DailyPullSection: React.FC<DailyPullSectionProps> = ({
         </div>
         
         {/* Quick Stats */}
-        <div className="card relative z-10 overflow-hidden flex-1">
+        <div className="card relative z-10 overflow-hidden" style={{ minHeight: '200px' }}>
           {/* Mystical glow effect */}
           <div className="absolute inset-0 bg-gradient-to-br from-crimson-stain/5 via-transparent to-amber-glow/5 rounded-lg" />
           <div className="absolute top-0 right-0 w-24 h-24 bg-crimson-stain/10 rounded-full blur-2xl" />
