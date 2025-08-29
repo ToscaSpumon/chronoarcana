@@ -64,7 +64,7 @@ const DailyPullSection: React.FC<DailyPullSectionProps> = ({
         {/* Main Content - Left Column */}
         <div className="lg:col-span-2 relative">
           <FloatingParticles particleCount={12} />
-          <div className="card relative overflow-hidden">
+          <div className="card relative overflow-hidden" style={{ minHeight: '400px' }}>
             {/* Mystical glow effect */}
             <div className="absolute inset-0 bg-gradient-to-br from-astral-gold/5 via-transparent to-amethyst-dream/5 rounded-lg" />
             <div className="absolute top-0 left-1/2 transform -translate-x-1/2 w-32 h-32 bg-astral-gold/10 rounded-full blur-3xl" />
@@ -144,9 +144,9 @@ const DailyPullSection: React.FC<DailyPullSectionProps> = ({
         </div>
 
         {/* Right Sidebar */}
-        <div className="space-y-6">
+        <div className="space-y-6 flex flex-col">
           {/* Deck Toggle */}
-          <div className="relative z-20">
+          <div className="relative z-20 mt-8">
             <DeckToggle
               currentDeckId={userDeckId}
               onDeckChange={onDeckChange}
@@ -154,7 +154,7 @@ const DailyPullSection: React.FC<DailyPullSectionProps> = ({
           </div>
           
           {/* Quick Stats */}
-          <div className="card relative z-10 overflow-hidden">
+          <div className="card relative z-10 overflow-hidden flex-1">
             {/* Mystical glow effect */}
             <div className="absolute inset-0 bg-gradient-to-br from-crimson-stain/5 via-transparent to-amber-glow/5 rounded-lg" />
             <div className="absolute top-0 right-0 w-24 h-24 bg-crimson-stain/10 rounded-full blur-2xl" />
@@ -214,7 +214,7 @@ const DailyPullSection: React.FC<DailyPullSectionProps> = ({
       <div className="lg:col-span-2 space-y-6 relative">
         <FloatingParticles particleCount={12} />
         {/* Today's Card Display */}
-        <div className="card relative overflow-hidden">
+        <div className="card relative overflow-hidden" style={{ minHeight: '400px' }}>
           {/* Mystical glow effect */}
           <div className="absolute inset-0 bg-gradient-to-br from-emerald-whisper/5 via-transparent to-sapphire-haze/5 rounded-lg" />
           <div className="absolute top-0 left-1/2 transform -translate-x-1/2 w-40 h-40 bg-emerald-whisper/10 rounded-full blur-3xl" />
@@ -269,9 +269,9 @@ const DailyPullSection: React.FC<DailyPullSectionProps> = ({
       </div>
 
       {/* Right Sidebar */}
-      <div className="space-y-6">
+      <div className="space-y-6 flex flex-col">
         {/* Deck Toggle */}
-        <div className="relative z-20">
+        <div className="relative z-20 mt-6">
           <DeckToggle
             currentDeckId={userDeckId}
             onDeckChange={onDeckChange}
@@ -279,7 +279,7 @@ const DailyPullSection: React.FC<DailyPullSectionProps> = ({
         </div>
         
         {/* Quick Stats */}
-        <div className="card relative z-10 overflow-hidden">
+        <div className="card relative z-10 overflow-hidden flex-1">
           {/* Mystical glow effect */}
           <div className="absolute inset-0 bg-gradient-to-br from-crimson-stain/5 via-transparent to-amber-glow/5 rounded-lg" />
           <div className="absolute top-0 right-0 w-24 h-24 bg-crimson-stain/10 rounded-full blur-2xl" />
