@@ -9,6 +9,7 @@ import Modal from '@/components/common/Modal';
 import Button from '@/components/common/Button';
 import LoadingSpinner from '@/components/common/LoadingSpinner';
 import CardDisplay from './CardDisplay';
+import NoteEditor from './NoteEditor';
 import { selectRandomCard } from '@/utils/helpers';
 
 interface DigitalPullModalProps {
@@ -26,6 +27,8 @@ const DigitalPullModal: React.FC<DigitalPullModalProps> = ({ isOpen, onClose, de
   const [selectedCard, setSelectedCard] = useState<TarotCard | null>(null);
   const [isShuffling, setIsShuffling] = useState(false);
   const [showCard, setShowCard] = useState(false);
+  const [showNotes, setShowNotes] = useState(false);
+  const [notes, setNotes] = useState('');
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
 
@@ -93,16 +96,30 @@ const DigitalPullModal: React.FC<DigitalPullModalProps> = ({ isOpen, onClose, de
     }
   };
 
+  const handleSaveWithNotes = async (notesText: string) => {
+    await handleSavePull(notesText);
+  };
+
   const resetModal = () => {
     setSelectedCard(null);
     setShowCard(false);
+    setShowNotes(false);
     setIsShuffling(false);
     setError(null);
+    setNotes('');
   };
 
   const handleClose = () => {
     onClose();
     setTimeout(resetModal, 300); // Wait for modal close animation
+  };
+
+  const handlePullAgain = () => {
+    resetModal();
+    // Start a new pull immediately
+    setTimeout(() => {
+      handlePullCard();
+    }, 100);
   };
 
   if (!isOpen) return null;
@@ -199,31 +216,50 @@ const DigitalPullModal: React.FC<DigitalPullModalProps> = ({ isOpen, onClose, de
             )}
           </div>
         ) : selectedCard ? (
-          <div className="space-y-6">
-            <h3 className="text-2xl font-cinzel font-semibold text-lunar-glow mb-4">
-              Your Card for Today
-            </h3>
-            <CardDisplay 
-              card={selectedCard} 
-              showMeanings={true}
-              animate={true}
-              enableTiltedCard={true}
-            />
-            <div className="flex justify-center space-x-4 mb-6">
-              <Button
-                variant="secondary"
-                onClick={handleClose}
-              >
-                Pull Again
-              </Button>
-              <Button
-                variant="primary"
-                onClick={() => handleSavePull()}
-                loading={loading}
-              >
-                Save This Pull
-              </Button>
-            </div>
+          <div className="space-y-6 pb-20">
+            {!showNotes ? (
+              <>
+                <h3 className="text-2xl font-cinzel font-semibold text-lunar-glow mb-4">
+                  Your Card for Today
+                </h3>
+                <CardDisplay 
+                  card={selectedCard} 
+                  showMeanings={true}
+                  animate={true}
+                  enableTiltedCard={true}
+                />
+                <div className="flex justify-center space-x-4 mb-6">
+                  <Button
+                    variant="secondary"
+                    onClick={handlePullAgain}
+                  >
+                    Pull Again
+                  </Button>
+                  <Button
+                    variant="secondary"
+                    onClick={() => setShowNotes(true)}
+                  >
+                    Add Notes
+                  </Button>
+                  <Button
+                    variant="primary"
+                    onClick={() => handleSavePull()}
+                    loading={loading}
+                  >
+                    Save This Pull
+                  </Button>
+                </div>
+              </>
+            ) : (
+              <div className="pb-20">
+                <NoteEditor
+                  initialNotes={notes}
+                  onSave={handleSaveWithNotes}
+                  onCancel={() => setShowNotes(false)}
+                  maxLength={5000}
+                />
+              </div>
+            )}
           </div>
         ) : null}
       </div>
