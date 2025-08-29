@@ -83,9 +83,7 @@ const AnimatedBackground: React.FC<AnimatedBackgroundProps> = ({
       <div className="absolute top-32 left-10 w-32 h-0.5 bg-gradient-to-r from-transparent via-lunar-glow to-transparent animate-shooting-star" />
       <div className="absolute top-48 right-32 w-24 h-0.5 bg-gradient-to-r from-transparent via-astral-gold to-transparent animate-shooting-star-delayed" />
 
-      {/* Nebula-like clouds */}
-      <div className="absolute top-1/4 left-0 w-96 h-96 bg-gradient-radial from-amethyst-dream/10 via-transparent to-transparent rounded-full blur-3xl animate-float" />
-      <div className="absolute bottom-1/4 right-0 w-80 h-80 bg-gradient-radial from-sapphire-haze/10 via-transparent to-transparent rounded-full blur-3xl animate-float-delayed" />
+
     </div>
   );
 };

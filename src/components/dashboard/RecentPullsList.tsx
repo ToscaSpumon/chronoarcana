@@ -165,7 +165,6 @@ const RecentPullsList: React.FC<RecentPullsListProps> = ({ pulls, pulls60Days, i
        <div className="bg-shadow-veil border border-midnight-aura rounded-xl p-6 text-center py-12 relative z-10">
          {/* Mystical glow effect */}
          <div className="absolute inset-0 bg-gradient-to-br from-astral-gold/5 via-transparent to-amethyst-dream/5 rounded-xl" />
-         <div className="absolute top-0 left-1/2 transform -translate-x-1/2 w-20 h-20 bg-astral-gold/10 rounded-full blur-xl" />
         <Calendar className="w-16 h-16 text-lunar-glow opacity-30 mx-auto mb-4" />
         <h3 className="text-xl font-cinzel font-semibold text-lunar-glow mb-2">
           No Recent Pulls
@@ -184,9 +183,8 @@ const RecentPullsList: React.FC<RecentPullsListProps> = ({ pulls, pulls60Days, i
        <div className="relative overflow-hidden">
          <FloatingParticles particleCount={8} />
          <div className="bg-shadow-veil border border-midnight-aura hover:border-astral-gold rounded-xl p-6 relative z-10 transition-all duration-300">
-           {/* Mystical glow effect */}
-           <div className="absolute inset-0 bg-gradient-to-br from-astral-gold/5 via-transparent to-amethyst-dream/5 rounded-xl" />
-           <div className="absolute top-0 left-1/2 transform -translate-x-1/2 w-24 h-24 bg-astral-gold/10 rounded-full blur-2xl" />
+                       {/* Mystical glow effect */}
+            <div className="absolute inset-0 bg-gradient-to-br from-astral-gold/5 via-transparent to-amethyst-dream/5 rounded-xl" />
         <div className="flex items-center justify-between mb-6">
           <h3 className="text-2xl font-cinzel font-semibold text-lunar-glow">
             Recent Pulls

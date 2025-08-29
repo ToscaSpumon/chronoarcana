@@ -67,7 +67,7 @@ const DailyPullSection: React.FC<DailyPullSectionProps> = ({
           <div className="card relative overflow-hidden" style={{ minHeight: '400px' }}>
             {/* Mystical glow effect */}
             <div className="absolute inset-0 bg-gradient-to-br from-astral-gold/5 via-transparent to-amethyst-dream/5 rounded-lg" />
-            <div className="absolute top-0 left-1/2 transform -translate-x-1/2 w-32 h-32 bg-astral-gold/10 rounded-full blur-3xl" />
+            
             
             <div className="relative z-10 text-center">
               <div className="w-20 h-20 mx-auto mb-6 bg-gradient-to-br from-astral-gold/20 to-amethyst-dream/20 rounded-full flex items-center justify-center border border-astral-gold/30 shadow-lg">
@@ -157,7 +157,6 @@ const DailyPullSection: React.FC<DailyPullSectionProps> = ({
           <div className="card relative z-10 overflow-hidden flex-1">
             {/* Mystical glow effect */}
             <div className="absolute inset-0 bg-gradient-to-br from-crimson-stain/5 via-transparent to-amber-glow/5 rounded-lg" />
-            <div className="absolute top-0 right-0 w-24 h-24 bg-crimson-stain/10 rounded-full blur-2xl" />
             
             <div className="relative z-10">
               <h3 className="text-xl font-cinzel font-semibold text-lunar-glow mb-4 drop-shadow-lg">
@@ -212,12 +211,10 @@ const DailyPullSection: React.FC<DailyPullSectionProps> = ({
     <div className="grid lg:grid-cols-3 gap-8">
       {/* Main Content - Left Column */}
       <div className="lg:col-span-2 space-y-6 relative">
-        <FloatingParticles particleCount={12} />
         {/* Today's Card Display */}
         <div className="card relative overflow-hidden" style={{ minHeight: '400px' }}>
           {/* Mystical glow effect */}
           <div className="absolute inset-0 bg-gradient-to-br from-emerald-whisper/5 via-transparent to-sapphire-haze/5 rounded-lg" />
-          <div className="absolute top-0 left-1/2 transform -translate-x-1/2 w-40 h-40 bg-emerald-whisper/10 rounded-full blur-3xl" />
           
           <div className="relative z-10 text-center mb-6">
             <h2 className="text-3xl font-cinzel font-bold text-lunar-glow mb-2 drop-shadow-lg">
@@ -252,7 +249,6 @@ const DailyPullSection: React.FC<DailyPullSectionProps> = ({
           <div className="card relative overflow-hidden">
             {/* Mystical glow effect */}
             <div className="absolute inset-0 bg-gradient-to-br from-amethyst-dream/5 via-transparent to-astral-gold/5 rounded-lg" />
-            <div className="absolute bottom-0 right-0 w-32 h-32 bg-amethyst-dream/10 rounded-full blur-3xl" />
             
             <div className="relative z-10">
               <h3 className="text-xl font-cinzel font-semibold text-lunar-glow mb-4 drop-shadow-lg">

@@ -123,12 +123,10 @@ const InteractiveCalendar: React.FC<InteractiveCalendarProps> = ({
   }, [pulls, currentDate]);
 
   return (
-    <div className={`relative overflow-hidden ${className}`}>
-      <FloatingParticles particleCount={10} />
-      <div className="card relative z-10">
+         <div className={`relative overflow-hidden ${className}`}>
+       <div className="card relative z-10">
         {/* Mystical glow effect */}
         <div className="absolute inset-0 bg-gradient-to-br from-astral-gold/5 via-transparent to-amethyst-dream/5 rounded-lg" />
-        <div className="absolute top-0 left-1/2 transform -translate-x-1/2 w-32 h-32 bg-astral-gold/10 rounded-full blur-3xl" />
         
         {/* Calendar Header */}
         <div className="flex items-center justify-between mb-6">
